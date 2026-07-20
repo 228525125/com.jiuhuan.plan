@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace com.jiuhuan.plan
+namespace com.jiuhuan.plan.view
 {
     partial class Form1
     {

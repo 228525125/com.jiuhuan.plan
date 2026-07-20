@@ -62,9 +62,9 @@ namespace com.jiuhuan.plan.commands
                 // 获取当前程序集
                 var assembly = System.Reflection.Assembly.GetExecutingAssembly();
                 
-                // 构建完整的类型名称，假设窗体类在 com.jiuhuan.plan.views 命名空间下
+                // 构建完整的类型名称，假设窗体类在 com.jiuhuan.plan.view 命名空间下
                 // 注意：请根据实际项目中窗体所在的命名空间调整下面的命名空间字符串
-                string namespaceName = "com.jiuhuan.plan";
+                string namespaceName = "com.jiuhuan.plan.view";
                 string fullTypeName = $"{namespaceName}.{_formName}";
                 
                 // 获取类型

@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace com.jiuhuan.plan
+namespace com.jiuhuan.plan.view
 {
     public partial class Form1 : Form, IController
     {
