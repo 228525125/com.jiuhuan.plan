@@ -1,0 +1,114 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="com.jiuhuan.plan" GeneratedClassName="Config">
+  <Profiles />
+  <Settings>
+    <Setting Name="image_home" Type="System.String" Scope="User">
+      <Value Profile="(Default)">home.png</Value>
+    </Setting>
+    <Setting Name="icon_logo" Type="System.String" Scope="User">
+      <Value Profile="(Default)">logo.ico</Value>
+    </Setting>
+    <Setting Name="database_server" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.1.209</Value>
+    </Setting>
+    <Setting Name="database_user" Type="System.String" Scope="User">
+      <Value Profile="(Default)">sa</Value>
+    </Setting>
+    <Setting Name="database_password" Type="System.String" Scope="User">
+      <Value Profile="(Default)">hao123.com</Value>
+    </Setting>
+    <Setting Name="database_name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">plan</Value>
+    </Setting>
+    <Setting Name="database_timeout" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="database_reconnect_time" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="sql_machine_team_findall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SELECT TEAM_CODE AS FCode,TEAM_DESCRIPTION AS FName,TEAM_CAPACITY AS FCapacity,TEAM_RATIO AS FRatio,REMARK AS FRemark FROM CQJH.dbo.MACHINE_TEAM</Value>
+    </Setting>
+    <Setting Name="task_helper_interval_default" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="log_upload_interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2000</Value>
+    </Setting>
+    <Setting Name="sql_workday_findall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SELECT * FROM Workday</Value>
+    </Setting>
+    <Setting Name="sql_workday_deleteall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DELETE Workday</Value>
+    </Setting>
+    <Setting Name="sql_mo_findall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SELECT m1.DOC_NO as FBillNo,m1.DOC_DATE as FDate,i1.ITEM_CODE as FNumber,i1.ITEM_NAME as FName,i1.ITEM_SPECIFICATION as FModel
+, CASE WHEN m1.STATUS = '1' THEN '未生产'
+	   WHEN m1.STATUS = '2' THEN '已发料'
+	   WHEN m1.STATUS = '3' THEN '生产中'
+  END AS FState
+,MIS.是否缺料 AS FLack                  --是否缺料
+,PLAN_QTY as FQty
+,COMPLETED_QTY as FCompletedQty           --完工数量
+,SCRAP_QTY as FScrapQty                   --报废数量
+,XRECEIPT_SETS as FReceiptQty             --退料数量
+,PLAN_START_DATE as FPlanStartDate        --计划开工
+,PLAN_COMPLETE_DATE as FPlanCompletedDate --计划完工
+,m1.REMARK as FRemark
+FROM CQJH.dbo.MO m1
+INNER JOIN CQJH.dbo.ITEM i1 ON m1.ITEM_ID=i1.ITEM_BUSINESS_ID
+LEFT JOIN v_MoInventoryStatus MIS ON m1.DOC_NO = MIS.工单号
+WHERE 1=1
+AND m1.RELEASE_FLAG=1         --下达
+AND m1.STATUS IN ('1','2','3')   --1：未生产；2：已发料；3：生产中
+AND m1.PLAN_COMPLETE_DATE &gt;= '{0}' AND m1.PLAN_COMPLETE_DATE &lt;= '{1}'</Value>
+    </Setting>
+    <Setting Name="sql_work_center_findall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SELECT WORK_CENTER_CODE,WORK_CENTER_NAME FROM CQJH.dbo.WORK_CENTER</Value>
+    </Setting>
+    <Setting Name="v_operation_findall_by_mo" Type="System.String" Scope="User">
+      <Value Profile="(Default)">select * from v_operation_findall_by_mo where FBillNo in ({0})</Value>
+    </Setting>
+    <Setting Name="v_schedule_record_findall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SELECT * FROM v_ScheduleRecord WHERE 1=1</Value>
+    </Setting>
+    <Setting Name="v_operation_record_findall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SELECT * FROM v_OperationRecord WHERE 1=1</Value>
+    </Setting>
+    <Setting Name="v_schedule_details_record_findall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SELECT * FROM v_ScheduleDetailsRecord WHERE 1=1</Value>
+    </Setting>
+    <Setting Name="sql_user_name_password" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SELECT * FROM [User] WHERE FName='{0}' AND FPassword='{1}'</Value>
+    </Setting>
+    <Setting Name="v_schedule_final_record_findall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SELECT * FROM v_ScheduleFinalRecord WHERE 1=1</Value>
+    </Setting>
+    <Setting Name="v_schedule_final_findall_by_mo" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SELECT * FROM v_schedule_final_findall_by_mo where FBillNo in ({0})</Value>
+    </Setting>
+    <Setting Name="sql_schedule_final_record_deleteall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DELETE ScheduleFinalRecord
+WHERE 1=1
+AND FOperationPlanStartDate&gt;='{0}' AND FOperationPlanStartDate&lt;='{1}'
+AND FUser = '{2}'
+AND FClasses LIKE '%{3}%'</Value>
+    </Setting>
+    <Setting Name="v_MoInventoryStatus_D_find_by_mo" Type="System.String" Scope="User">
+      <Value Profile="(Default)">select * from v_MoInventoryStatus_D where FBillNo = '{0}' AND FInventoryStatus&lt;&gt;'充足'</Value>
+    </Setting>
+    <Setting Name="sql_mo_d_find_by_billno" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SELECT ITEM_CODE AS MaterialCode, CAST(REQUIRED_QTY AS decimal(18,3)) AS Quantity
+FROM [CQJH].dbo.MO_D
+INNER JOIN [CQJH].dbo.ITEM ON MO_D.ITEM_ID = ITEM.ITEM_BUSINESS_ID
+INNER JOIN [CQJH].dbo.MO ON MO_D.MO_ID = MO.MO_ID
+WHERE MO.DOC_NO = '{0}'</Value>
+    </Setting>
+    <Setting Name="v_StockAvailableQuantity_findall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SELECT * FROM v_StockAvailableQuantity</Value>
+    </Setting>
+    <Setting Name="sql_stamp_record_silian_data_findall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SELECT * FROM coc.dbo.StampRecordSilianData WHERE 1=1</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

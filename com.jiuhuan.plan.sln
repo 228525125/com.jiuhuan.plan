@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34407.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.jiuhuan.plan", "com.jiuhuan.plan.csproj", "{F32DD0D9-E2DA-4B95-BF30-2BE9D98A168C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F32DD0D9-E2DA-4B95-BF30-2BE9D98A168C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F32DD0D9-E2DA-4B95-BF30-2BE9D98A168C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F32DD0D9-E2DA-4B95-BF30-2BE9D98A168C}.Debug|x86.ActiveCfg = Debug|x86
+		{F32DD0D9-E2DA-4B95-BF30-2BE9D98A168C}.Debug|x86.Build.0 = Debug|x86
+		{F32DD0D9-E2DA-4B95-BF30-2BE9D98A168C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F32DD0D9-E2DA-4B95-BF30-2BE9D98A168C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F32DD0D9-E2DA-4B95-BF30-2BE9D98A168C}.Release|x86.ActiveCfg = Release|x86
+		{F32DD0D9-E2DA-4B95-BF30-2BE9D98A168C}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {10C1C051-2A00-4666-9644-490B4EB6AEE9}
+	EndGlobalSection
+EndGlobal
