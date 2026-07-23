@@ -741,7 +741,7 @@ namespace com.jiuhuan.plan.view
                     ComboBox comboBox = new ComboBox();
                     comboBox.Name = property.Name;
                     comboBox.Width = comboBoxAttribute.Width;
-                    comboBox.Enabled = comboBoxAttribute.UI && (isNew || !comboBoxAttribute.ReadOnly);
+                    comboBox.Enabled = !comboBoxAttribute.UI && (isNew || !comboBoxAttribute.ReadOnly);
 
                     // 解析并设置ComboBox的选项
                     if (!string.IsNullOrEmpty(comboBoxAttribute.Items))

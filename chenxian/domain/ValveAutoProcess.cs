@@ -16,7 +16,7 @@ namespace com.jiuhuan.plan.domain
         public string FNumber { get; set; }
 
         [Column(width: 100)]
-        [TextBox(width: 100, readOnly: false)]
+        [ComboBox("五阀体;三阀体;左高压二阀体;差压左高压二阀体", width:100, readOnly: false)]
         [Field("阀体类型")]
         public string FVavleType { get; set; }
 

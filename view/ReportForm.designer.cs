@@ -121,6 +121,7 @@ namespace com.jiuhuan.plan.view
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label4 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -454,6 +455,7 @@ namespace com.jiuhuan.plan.view
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.label7);
             this.panel3.Controls.Add(this.label6);
             this.panel3.Controls.Add(this.button8);
             this.panel3.Controls.Add(this.button7);
@@ -1048,6 +1050,15 @@ namespace com.jiuhuan.plan.view
             this.label4.Text = "时间：";
             this.label4.Visible = false;
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(713, 9);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(52, 15);
+            this.label7.TabIndex = 16;
+            this.label7.Text = "汇总：";
+            // 
             // ReportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -1170,5 +1181,6 @@ namespace com.jiuhuan.plan.view
         private System.Windows.Forms.DateTimePicker dateTimePicker2;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label7;
     }
 }

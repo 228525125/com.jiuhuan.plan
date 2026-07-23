@@ -55,7 +55,7 @@ namespace com.jiuhuan.plan.view
                 (string.IsNullOrEmpty(queryText) ||
                 bill.FBillNo.Contains(queryText) ||
                 bill.FSerialNumber.Contains(queryText) ||
-                bill.FBillNo.Contains(queryText))
+                bill.FQrcode.Contains(queryText))
             ).ToList();
         }
 

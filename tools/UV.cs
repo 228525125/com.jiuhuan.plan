@@ -1043,7 +1043,7 @@ namespace com.jiuhuan.plan
             TabControl tabControl = FindControlRecursive<TabControl>(form);
             if (tabControl == null || tabControl.SelectedTab == null)
             {
-                MessageBox.Show("未找到TabControl或未选中TabPage", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                //MessageBox.Show("未找到TabControl或未选中TabPage", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return null;
             }
 
@@ -1052,7 +1052,7 @@ namespace com.jiuhuan.plan
 
             if (string.IsNullOrEmpty(currentTabTitle))
             {
-                MessageBox.Show("当前TabPage标题为空", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                //MessageBox.Show("当前TabPage标题为空", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return null;
             }
 
@@ -1060,7 +1060,7 @@ namespace com.jiuhuan.plan
             DataGridView dataGridView = FindDataGridViewInTabPage(currentPage);
             if (dataGridView == null)
             {
-                MessageBox.Show($"在TabPage '{currentTabTitle}' 中未找到DataGridView控件", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show($"在TabPage '{currentTabTitle}' 中未找到DataGridView控件", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
 

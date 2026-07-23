@@ -314,8 +314,8 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected void Export()
         {
-            var list = UV.GetSelectedRows<T>(GetDataGridView1());
-            ExcelHelper.Export(list);
+            //var list = UV.GetSelectedRows<T>(GetDataGridView1());
+            ExcelHelper.Export(selectedRecords);
         }
 
         /// <summary>

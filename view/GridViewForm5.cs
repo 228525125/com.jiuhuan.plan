@@ -101,7 +101,7 @@ namespace com.jiuhuan.plan.view
 
             user = Framework.Interface.GetModel<ISessionModel>().GetUser();
 
-            _pageSize = 50;
+            _pageSize = 2000;
 
             LoadData();
 
@@ -109,6 +109,19 @@ namespace com.jiuhuan.plan.view
             UV.InitializationDataGridView(GetDataGridView2(), selectedRecords);
             // 设置筛选DataGridView
             UV.SetupFilterDataGridView(GetDataGridView2(), selectedRecords);
+
+            // 从User.FBuffer获取配置并应用到DataGridView           
+            string configKey = _title;
+            var valueConfig = user.GetSettings(configKey);
+            if (valueConfig != null)
+            {
+                Dictionary<string, object> savedConfig = null;
+                if (valueConfig is Dictionary<string, object> vc)
+                    savedConfig = vc;
+                else
+                    savedConfig = JsonHelper.toObject<Dictionary<string, object>>(valueConfig.ToString());
+                UV.ApplyColumnConfiguration(GetDataGridView1(), savedConfig);
+            }
         }
 
         protected virtual SplitContainer GetSplitContainer()
@@ -186,13 +199,13 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected void Export()
         {
-            var list = UV.GetSelectedRows(GetDataGridView1());
-            if (list == null || list.Count == 0)
-            {
-                MessageBox.Show("没有选择要导出的数据行，请检查！", "提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            ExcelHelper.Export(list);
+            //var list = UV.GetSelectedRows(GetDataGridView1());
+            //if (list == null || list.Count == 0)
+            //{
+            //    MessageBox.Show("没有选择要导出的数据行，请检查！", "提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return;
+            //}
+            ExcelHelper.Export(selectedRecords);
         }
 
         /// <summary>
@@ -252,6 +265,45 @@ namespace com.jiuhuan.plan.view
             SetDataSource(queryResult);
 
             UpdatePagination(selectedRecords);
+
+            // 从 SQL 文件中解析 <sum> 标签，表示需要汇总显示的字段
+            var sum = Utility.ParseXmlTag(sqlFromFile, "sum");
+
+            if (!string.IsNullOrEmpty(sum))
+            {
+                // 解析汇总字段名，多个字段用分号隔开
+                string[] sumFields = sum.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                // 对每个汇总字段计算总和
+                List<string> sumResults = new List<string>();
+                foreach (string fieldName in sumFields)
+                {
+                    string trimmedField = fieldName.Trim();
+                    if (string.IsNullOrEmpty(trimmedField))
+                        continue;
+
+                    decimal total = 0;
+                    foreach (var record in queryResult)
+                    {
+                        if (record.ContainsKey(trimmedField) && record[trimmedField] != null)
+                        {
+                            if (decimal.TryParse(record[trimmedField].ToString(), out decimal value))
+                            {
+                                total += value;
+                            }
+                        }
+                    }
+
+                    sumResults.Add($"{trimmedField}：{total}");
+                }
+
+                // 将汇总结果显示到 label7
+                Label sumLabel = this.Controls.Find("label7", true).FirstOrDefault() as Label;
+                if (sumLabel != null)
+                {
+                    sumLabel.Text = "合计 =>   " + string.Join("  ", sumResults);
+                }
+            }
         }
 
         /// <summary>
