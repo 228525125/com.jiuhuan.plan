@@ -32,6 +32,7 @@ namespace com.jiuhuan.plan.view
             // 程序启动时，隐藏主窗口并弹出登录窗口
             this.Hide();
             ShowLoginForm();
+            int I = 0;
         }
 
         /// <summary>
