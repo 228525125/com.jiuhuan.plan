@@ -23,6 +23,7 @@ namespace com.jiuhuan.plan.view
         {
             InitializeComponent();
             ConfigHelper.Init();
+            int i = 0;
         }
 
         private void Form1_Load(object sender, EventArgs e)
