@@ -620,7 +620,7 @@ namespace com.jiuhuan.plan.tools {
 
                 if (property.PropertyType == typeof(string))
                 {
-                    columns.Add($"\t[{columnName}] [nvarchar](50) NULL");
+                    columns.Add($"\t[{columnName}] [nvarchar](MAX) NULL");
                     if (!string.IsNullOrEmpty(defaultValue))
                     {
                         defaultConstraints.Add($"ALTER TABLE [{tableName}] ADD  CONSTRAINT [DF_{tableName}_{columnName}]  DEFAULT ('{defaultValue}') FOR [{columnName}]");
@@ -653,7 +653,7 @@ namespace com.jiuhuan.plan.tools {
                 else
                 {
                     // 其他类型默认为nvarchar(50)
-                    columns.Add($"\t[{columnName}] [nvarchar](50) NULL");
+                    columns.Add($"\t[{columnName}] [nvarchar](MAX) NULL");
                     defaultConstraints.Add($"ALTER TABLE [{tableName}] ADD  CONSTRAINT [DF_{tableName}_{columnName}]  DEFAULT ('') FOR [{columnName}]");
                 }
             }
