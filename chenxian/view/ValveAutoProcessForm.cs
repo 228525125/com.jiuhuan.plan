@@ -22,7 +22,7 @@ namespace com.jiuhuan.plan.view
         {
             InitializeData();
 
-            dateTimePicker1.Value = DateTime.Now;
+            dateTimePicker1.Value = DateTime.Now.AddMonths(-12);
             dateTimePicker2.Value = DateTime.Now.AddMonths(1);
 
             // 初始化分页显示

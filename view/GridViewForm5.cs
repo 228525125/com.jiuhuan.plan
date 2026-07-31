@@ -10,8 +10,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Label = System.Windows.Forms.Label;
 
 namespace com.jiuhuan.plan.view
 {
@@ -103,25 +105,26 @@ namespace com.jiuhuan.plan.view
 
             _pageSize = 2000;
 
-            LoadData();
+            LoadData(() => {
 
-            UV.InitializationDataGridView(GetDataGridView1(), this, selectedRecords);
-            UV.InitializationDataGridView(GetDataGridView2(), selectedRecords);
-            // 设置筛选DataGridView
-            UV.SetupFilterDataGridView(GetDataGridView2(), selectedRecords);
+                UV.InitializationDataGridView(GetDataGridView1(), this, selectedRecords);
+                UV.InitializationDataGridView(GetDataGridView2(), selectedRecords);
+                // 设置筛选DataGridView
+                UV.SetupFilterDataGridView(GetDataGridView2(), selectedRecords);
 
-            // 从User.FBuffer获取配置并应用到DataGridView           
-            string configKey = _title;
-            var valueConfig = user.GetSettings(configKey);
-            if (valueConfig != null)
-            {
-                Dictionary<string, object> savedConfig = null;
-                if (valueConfig is Dictionary<string, object> vc)
-                    savedConfig = vc;
-                else
-                    savedConfig = JsonHelper.toObject<Dictionary<string, object>>(valueConfig.ToString());
-                UV.ApplyColumnConfiguration(GetDataGridView1(), savedConfig);
-            }
+                // 从User.FBuffer获取配置并应用到DataGridView           
+                string configKey = _title;
+                var valueConfig = user.GetSettings(configKey);
+                if (valueConfig != null)
+                {
+                    Dictionary<string, object> savedConfig = null;
+                    if (valueConfig is Dictionary<string, object> vc)
+                        savedConfig = vc;
+                    else
+                        savedConfig = JsonHelper.toObject<Dictionary<string, object>>(valueConfig.ToString());
+                    UV.ApplyColumnConfiguration(GetDataGridView1(), savedConfig);
+                }
+            });
         }
 
         protected virtual SplitContainer GetSplitContainer()
@@ -211,99 +214,143 @@ namespace com.jiuhuan.plan.view
         /// <summary>
         /// 从数据库加载数据
         /// </summary>
-        public void LoadData()
+        public async void LoadData(System.Action action = null)
         {
-            string sqlFileName = $"Report_{_title}.sql";
+            // 显示进度窗口
+            ProgressWindow progressWindow = new ProgressWindow();
+            progressWindow.Show(this);
 
-            // 获取当前应用程序目录
-            string appDirectory = Utils.GetAppDirectory();
-
-            // 构建SQL文件的完整路径：当前目录/sql/文件名
-            string sqlFilePath = Path.Combine(appDirectory, "sql", sqlFileName);
-
-            // 检查文件是否存在
-            if (!File.Exists(sqlFilePath))
+            await Task.Run(() =>
             {
-                MessageBox.Show($"默认SQL文件不存在: {sqlFilePath}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+                // 更新进度
+                progressWindow.UpdateProgress(10, "正在查找SQL文件...");
 
-            // 读取SQL文件内容
-            string sqlFromFile = File.ReadAllText(sqlFilePath, Encoding.Default);
+                string sqlFileName = $"Report_{_title}.sql";
 
-            // 从 SQL 文件中解析 <parameter> 标签并替换为实际参数值
-            var param = Utility.ParseXmlTag(sqlFromFile, "parameter");
+                // 获取当前应用程序目录
+                string appDirectory = Utils.GetAppDirectory();
 
-            if (!string.IsNullOrEmpty(param))
-            {
-                // 使用 JsonHelper 解析 JSON 格式的参数定义
-                List<SqlParamDefinition> paramDefinitions = JsonHelper.toObject<List<SqlParamDefinition>>(param);
+                // 构建SQL文件的完整路径：当前目录/sql/文件名
+                string sqlFilePath = Path.Combine(appDirectory, "sql", sqlFileName);
 
-                if (paramDefinitions != null && paramDefinitions.Count > 0)
+                // 检查文件是否存在
+                if (!File.Exists(sqlFilePath))
                 {
-                    // 弹窗让用户输入参数值
-                    using (SqlParameterDialog paramDialog = new SqlParameterDialog(paramDefinitions))
-                    {
-                        if (paramDialog.ShowDialog(this) != DialogResult.OK)
-                        {
-                            return;
-                        }
-
-                        // 根据用户输入替换 SQL 中的占位符 {name}
-                        Dictionary<string, string> paramValues = paramDialog.ParamValues;
-                        foreach (var kvp in paramValues)
-                        {
-                            sqlFromFile = sqlFromFile.Replace("{" + kvp.Key + "}", kvp.Value);
-                        }
-                    }
+                    MessageBox.Show($"默认SQL文件不存在: {sqlFilePath}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
-            }
 
-            // 执行查询
-            List<Dictionary<string, object>> queryResult = DaoTemplate.FindAll(sqlFromFile);
+                // 更新进度
+                progressWindow.UpdateProgress(20, "正在读取SQL文件...");
 
-            SetDataSource(queryResult);
+                // 读取SQL文件内容
+                string sqlFromFile = File.ReadAllText(sqlFilePath, Encoding.Default);
 
-            UpdatePagination(selectedRecords);
+                // 从 SQL 文件中解析 <parameter> 标签并替换为实际参数值
+                var param = Utility.ParseXmlTag(sqlFromFile, "parameter");
 
-            // 从 SQL 文件中解析 <sum> 标签，表示需要汇总显示的字段
-            var sum = Utility.ParseXmlTag(sqlFromFile, "sum");
+                // 更新进度
+                progressWindow.UpdateProgress(30, "正在解析参数...");
 
-            if (!string.IsNullOrEmpty(sum))
-            {
-                // 解析汇总字段名，多个字段用分号隔开
-                string[] sumFields = sum.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                // 对每个汇总字段计算总和
-                List<string> sumResults = new List<string>();
-                foreach (string fieldName in sumFields)
+                if (!string.IsNullOrEmpty(param))
                 {
-                    string trimmedField = fieldName.Trim();
-                    if (string.IsNullOrEmpty(trimmedField))
-                        continue;
+                    // 使用 JsonHelper 解析 JSON 格式的参数定义
+                    List<SqlParamDefinition> paramDefinitions = JsonHelper.toObject<List<SqlParamDefinition>>(param);
 
-                    decimal total = 0;
-                    foreach (var record in queryResult)
+                    if (paramDefinitions != null && paramDefinitions.Count > 0)
                     {
-                        if (record.ContainsKey(trimmedField) && record[trimmedField] != null)
+                        // 弹窗让用户输入参数值
+                        using (SqlParameterDialog paramDialog = new SqlParameterDialog(paramDefinitions))
                         {
-                            if (decimal.TryParse(record[trimmedField].ToString(), out decimal value))
+                            if (paramDialog.ShowDialog(this) != DialogResult.OK)
                             {
-                                total += value;
+                                return;
+                            }
+
+                            // 根据用户输入替换 SQL 中的占位符 {name}
+                            Dictionary<string, string> paramValues = paramDialog.ParamValues;
+                            foreach (var kvp in paramValues)
+                            {
+                                sqlFromFile = sqlFromFile.Replace("{" + kvp.Key + "}", kvp.Value);
                             }
                         }
                     }
-
-                    sumResults.Add($"{trimmedField}：{total}");
                 }
 
-                // 将汇总结果显示到 label7
-                Label sumLabel = this.Controls.Find("label7", true).FirstOrDefault() as Label;
-                if (sumLabel != null)
+                // 更新进度
+                progressWindow.UpdateProgress(40, "正在执行查询语句...");
+
+                // 执行查询
+                List<Dictionary<string, object>> queryResult = DaoTemplate.FindAll(sqlFromFile);
+
+                // 更新进度
+                progressWindow.UpdateProgress(50, "查询语句执行完毕...");
+
+                SetDataSource(queryResult);
+
+                UpdatePagination(selectedRecords);
+
+                // 更新进度
+                progressWindow.UpdateProgress(60, "正在汇总结果...");
+
+                // 从 SQL 文件中解析 <sum> 标签，表示需要汇总显示的字段
+                var sum = Utility.ParseXmlTag(sqlFromFile, "sum");
+
+                if (!string.IsNullOrEmpty(sum))
                 {
-                    sumLabel.Text = "合计 =>   " + string.Join("  ", sumResults);
+                    // 解析汇总字段名，多个字段用分号隔开
+                    string[] sumFields = sum.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    // 对每个汇总字段计算总和
+                    List<string> sumResults = new List<string>();
+                    foreach (string fieldName in sumFields)
+                    {
+                        string trimmedField = fieldName.Trim();
+                        if (string.IsNullOrEmpty(trimmedField))
+                            continue;
+
+                        decimal total = 0;
+                        foreach (var record in queryResult)
+                        {
+                            if (record.ContainsKey(trimmedField) && record[trimmedField] != null)
+                            {
+                                if (decimal.TryParse(record[trimmedField].ToString(), out decimal value))
+                                {
+                                    total += value;
+                                }
+                            }
+                        }
+
+                        sumResults.Add($"{trimmedField}：{total}");
+                    }
+
+                    // 将汇总结果显示到 label7
+                    Label sumLabel = this.Controls.Find("label7", true).FirstOrDefault() as Label;
+                    if (sumLabel != null)
+                    {
+                        sumLabel.Text = "合计 =>   " + string.Join("  ", sumResults);
+                    }
                 }
-            }
+
+                // 更新进度
+                progressWindow.UpdateProgress(70, "数据准备完毕...");
+            });
+
+            // 更新进度
+            progressWindow.UpdateProgress(80, "正在将数据导入表格...");
+
+            await Task.Run(() =>
+            {
+                action?.Invoke();
+
+                // 更新进度
+                progressWindow.UpdateProgress(100, "完成显示！");
+
+                Thread.Sleep(1000);
+            });
+
+            // 关闭进度窗口
+            progressWindow.Close();
         }
 
         /// <summary>

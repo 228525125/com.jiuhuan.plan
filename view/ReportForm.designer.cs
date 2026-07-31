@@ -61,6 +61,7 @@ namespace com.jiuhuan.plan.view
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
@@ -121,7 +122,6 @@ namespace com.jiuhuan.plan.view
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label4 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -177,33 +177,6 @@ namespace com.jiuhuan.plan.view
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AllowUserToOrderColumns = true;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.FFixed1,
-            this.Column2,
-            this.Column13,
-            this.Column14,
-            this.Column15,
-            this.Column22,
-            this.Column16,
-            this.Column17,
-            this.Column12,
-            this.Column21,
-            this.Column18,
-            this.Column23,
-            this.Column24,
-            this.Column10,
-            this.Column11,
-            this.FRemainQty,
-            this.Column19,
-            this.Column1,
-            this.Column20,
-            this.Column4,
-            this.Column5,
-            this.Column6,
-            this.Column7,
-            this.Column3,
-            this.Column8,
-            this.Column9});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
@@ -469,6 +442,15 @@ namespace com.jiuhuan.plan.view
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(1266, 31);
             this.panel3.TabIndex = 2;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(713, 9);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(52, 15);
+            this.label7.TabIndex = 16;
+            this.label7.Text = "汇总：";
             // 
             // label6
             // 
@@ -1049,15 +1031,6 @@ namespace com.jiuhuan.plan.view
             this.label4.TabIndex = 76;
             this.label4.Text = "时间：";
             this.label4.Visible = false;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(713, 9);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(52, 15);
-            this.label7.TabIndex = 16;
-            this.label7.Text = "汇总：";
             // 
             // ReportForm
             // 
