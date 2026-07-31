@@ -251,13 +251,13 @@ namespace com.jiuhuan.plan.view
             this.文件ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.退出ToolStripMenuItem});
             this.文件ToolStripMenuItem.Name = "文件ToolStripMenuItem";
-            this.文件ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
+            this.文件ToolStripMenuItem.Size = new System.Drawing.Size(51, 24);
             this.文件ToolStripMenuItem.Text = "文件";
             // 
             // 退出ToolStripMenuItem
             // 
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(122, 26);
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(114, 26);
             this.退出ToolStripMenuItem.Text = "退出";
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
@@ -266,13 +266,13 @@ namespace com.jiuhuan.plan.view
             this.查看ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.程序安装目录ToolStripMenuItem});
             this.查看ToolStripMenuItem.Name = "查看ToolStripMenuItem";
-            this.查看ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
+            this.查看ToolStripMenuItem.Size = new System.Drawing.Size(51, 24);
             this.查看ToolStripMenuItem.Text = "查看";
             // 
             // 程序安装目录ToolStripMenuItem
             // 
             this.程序安装目录ToolStripMenuItem.Name = "程序安装目录ToolStripMenuItem";
-            this.程序安装目录ToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
+            this.程序安装目录ToolStripMenuItem.Size = new System.Drawing.Size(174, 26);
             this.程序安装目录ToolStripMenuItem.Text = "程序安装目录";
             this.程序安装目录ToolStripMenuItem.Click += new System.EventHandler(this.程序安装目录ToolStripMenuItem_Click);
             // 
@@ -281,13 +281,13 @@ namespace com.jiuhuan.plan.view
             this.帮助ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.版本信息ToolStripMenuItem});
             this.帮助ToolStripMenuItem.Name = "帮助ToolStripMenuItem";
-            this.帮助ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
+            this.帮助ToolStripMenuItem.Size = new System.Drawing.Size(51, 24);
             this.帮助ToolStripMenuItem.Text = "帮助";
             // 
             // 版本信息ToolStripMenuItem
             // 
             this.版本信息ToolStripMenuItem.Name = "版本信息ToolStripMenuItem";
-            this.版本信息ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
+            this.版本信息ToolStripMenuItem.Size = new System.Drawing.Size(144, 26);
             this.版本信息ToolStripMenuItem.Text = "版本信息";
             this.版本信息ToolStripMenuItem.Click += new System.EventHandler(this.版本信息ToolStripMenuItem_Click);
             // 
