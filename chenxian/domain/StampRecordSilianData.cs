@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace com.jiuhuan.plan.domain
 {
-    [Entity(entirety: true, Database = "coc", Title = "四联二次阀编码")]
+    [Entity(entirety: true, Database = "coc", Title = "客户唯一码")]
     public class StampRecordSilianData : Entity
     {
-        [Column("二次阀编码", 200)]
-        [TextBox("二次阀编码", 200)]
+        [Column("客户编码", 200)]
+        [TextBox("客户编码", 200)]
         [Keyword]
         public string FSilianSerialNumber { get; set; }
 

@@ -15,7 +15,7 @@ using System.Windows.Forms;
 namespace com.jiuhuan.plan.view
 {
     /// <summary>
-    /// 所有在 tabControl1 中打开的 Form 的基类，支持一对一的实体
+    /// 所有在 tabControl1 中打开的 Form 的基类，支持一对一、一对多、多对多的实体
     /// </summary>
     public class GridViewForm<T> : BaseForm, IPagination<T> where T : Entity, new()
     {
@@ -127,6 +127,8 @@ namespace com.jiuhuan.plan.view
                 _pageSize = null != num ? int.Parse(num.ToString()) : 200;
             else
                 _pageSize = 2000;
+
+            LoadData();
         }
 
         public void UpdateData()
@@ -221,27 +223,58 @@ namespace com.jiuhuan.plan.view
         /// <summary>
         /// 从数据库加载数据
         /// </summary>
-        public void LoadData()
+        public async void LoadData()
         {
-            if(null == Sql())
+            // 显示进度窗口
+            ProgressWindow progressWindow = new ProgressWindow();
+            progressWindow.Show(this);
+
+            await Task.Run(() =>
             {
-                if ((bool)Utility.GetAttributeValueByClass<T>("Entity", "Entirety"))
+                // 更新进度
+                progressWindow.UpdateProgress(10, "正在执行SQL语句...");
+
+                if (null == Sql())
                 {
-                    selectedRecords = DaoTemplate.FindAll<T>();
+                    if ((bool)Utility.GetAttributeValueByClass<T>("Entity", "Entirety"))
+                    {
+                        selectedRecords = DaoTemplate.FindAll<T>();
+
+                        // 更新进度
+                        progressWindow.UpdateProgress(50, "执行SQL语句成功...");
+                    }
+                    else
+                    {
+                        selectedRecords = DaoTemplate.FindAllByUser<T>(user.FName);
+
+                        // 更新进度
+                        progressWindow.UpdateProgress(50, "执行SQL语句成功...");
+                    }
                 }
                 else
                 {
-                    selectedRecords = DaoTemplate.FindAllByUser<T>(user.FName);
+                    string ss = Sql();
+                    string sql = BuildFinalSql(ss);
+                    selectedRecords = UV.LoadData<T>(sql);
+
+                    // 更新进度
+                    progressWindow.UpdateProgress(50, "执行SQL语句成功...");
                 }
-            }
-            else
-            {
-                string ss = Sql();
-                string sql = BuildFinalSql(ss);
-                selectedRecords = UV.LoadData<T>(sql);
-            }
+            });
+
+            // 更新进度
+            progressWindow.UpdateProgress(70, "数据准备完毕...");
+
+            // 更新进度
+            progressWindow.UpdateProgress(80, "正在将数据导入表格...");
 
             UpdatePagination(selectedRecords);
+
+            // 更新进度
+            progressWindow.UpdateProgress(100, "完成显示！");
+
+            // 关闭进度窗口
+            progressWindow.Close();
         }
 
         /// <summary>
@@ -359,6 +392,64 @@ namespace com.jiuhuan.plan.view
 
                     // 保存数据
                     UV.SaveAsync(record, this, true, () => {
+                        // 检查T类型的所有属性字段是否包含OneToMany特性，如果有则单独保存子实体
+                        var property = Utility.GetPropertyWithAttribute<T>("OneToMany");
+                        if (null != property)
+                        {
+                            // 获取属性上的OneToMany特性
+                            var oneToManyAttr = property.GetCustomAttribute<OneToManyAttribute>(true);
+
+                            if (oneToManyAttr != null)
+                            {
+                                try
+                                {
+                                    // 获取子实体列表的值
+                                    var childList = property.GetValue(record) as System.Collections.IList;
+
+                                    if (childList != null && childList.Count > 0)
+                                    {
+                                        // 遍历子实体列表并保存
+                                        foreach (var childItem in childList)
+                                        {
+                                            if (childItem is Entity childEntity)
+                                            {
+                                                // 设置外键关联（如果需要）
+                                                // 这里假设子实体有指向父实体的外键，通常由ORM或业务逻辑处理
+                                                // 如果需要手动设置，可根据OneToOneAttr或约定进行设置
+
+                                                // 保存子实体
+                                                UV.SaveAsync(childEntity, this);
+                                            }
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show($"保存关联数据 {property.Name} 时出错: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                            }
+                        }
+
+                        // 检查T类型的所有属性字段是否包含ManyToMany特性，如果有则保存多对多关联数据
+                        var manyToManyProperty = Utility.GetPropertyWithAttribute<T>("ManyToMany");
+                        if (null != manyToManyProperty)
+                        {
+                            // 获取属性上的ManyToMany特性
+                            var manyToManyAttr = manyToManyProperty.GetCustomAttribute<ManyToManyAttribute>(true);
+
+                            if (manyToManyAttr != null)
+                            {
+                                try
+                                {
+                                    // 保存多对多关联数据到中间表
+                                    SaveManyToManyRelationships(record, manyToManyProperty, manyToManyAttr);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show($"保存多对多关联数据 {manyToManyProperty.Name} 时出错: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                            }
+                        }
 
                         ReloadRecords();
                     });
@@ -458,7 +549,71 @@ namespace com.jiuhuan.plan.view
                 }
 
                 // 保存数据
-                UV.SaveAsync(recordToUpdate, this);
+                UV.SaveAsync(recordToUpdate, this, true, () => {
+
+                    // 检查T类型的所有属性字段是否包含OneToMany特性，如果有则单独保存子实体
+                    var property = Utility.GetPropertyWithAttribute<T>("OneToMany");
+                    if (null != property)
+                    {
+                        // 获取属性上的OneToMany特性
+                        var oneToManyAttr = property.GetCustomAttribute<OneToManyAttribute>(true);
+
+                        if (oneToManyAttr != null)
+                        {
+                            try
+                            {
+                                // 删除旧的子实体数据
+                                DeleteOldChildEntities(recordToUpdate, property, oneToManyAttr);
+
+                                // 获取子实体列表的值
+                                var childList = property.GetValue(recordToUpdate) as System.Collections.IList;
+
+                                if (childList != null && childList.Count > 0)
+                                {
+                                    // 遍历子实体列表并保存
+                                    foreach (var childItem in childList)
+                                    {
+                                        if (childItem is Entity childEntity)
+                                        {
+                                            // 设置外键关联（如果需要）
+                                            // 这里假设子实体有指向父实体的外键，通常由ORM或业务逻辑处理
+                                            // 如果需要手动设置，可根据OneToOneAttr或约定进行设置
+
+                                            // 保存子实体
+                                            UV.SaveAsync(childEntity, this, false);
+                                        }
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"保存关联数据 {property.Name} 时出错: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+
+                    // 检查T类型的所有属性字段是否包含ManyToMany特性，如果有则保存多对多关联数据
+                    var manyToManyProperty = Utility.GetPropertyWithAttribute<T>("ManyToMany");
+                    if (null != manyToManyProperty)
+                    {
+                        // 获取属性上的ManyToMany特性
+                        var manyToManyAttr = manyToManyProperty.GetCustomAttribute<ManyToManyAttribute>(true);
+
+                        if (manyToManyAttr != null)
+                        {
+                            try
+                            {
+                                // 先删除旧的中间表关系数据，再保存新的关系数据
+                                DeleteManyToManyRelationships(recordToUpdate, manyToManyProperty, manyToManyAttr);
+                                SaveManyToManyRelationships(recordToUpdate, manyToManyProperty, manyToManyAttr);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"保存多对多关联数据 {manyToManyProperty.Name} 时出错: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                });
             }
         }
 
@@ -627,147 +782,6 @@ namespace com.jiuhuan.plan.view
         protected void ColumnSettings()
         {
             UV.ColumnSettings<T>(GetDataGridView1(), user, this);
-
-            // 创建列配置窗体
-            //using (var columnConfigForm = new Form())
-            //{
-            //    columnConfigForm.Text = "列显示配置";
-            //    columnConfigForm.Size = new Size(800, 500);
-            //    columnConfigForm.StartPosition = FormStartPosition.CenterParent;
-
-            //    // 创建DataGridView
-            //    DataGridView dgvColumns = new DataGridView();
-            //    dgvColumns.Dock = DockStyle.Fill;
-            //    dgvColumns.AllowUserToAddRows = false;
-            //    dgvColumns.AllowUserToDeleteRows = false;
-            //    dgvColumns.ReadOnly = false;
-            //    dgvColumns.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            //    dgvColumns.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-            //    // 添加四列 - 修正：在添加列时直接指定正确的列类型
-            //    DataGridViewTextBoxColumn columnNameColumn = new DataGridViewTextBoxColumn();
-            //    columnNameColumn.Name = "ColumnName";
-            //    columnNameColumn.HeaderText = "列名";
-            //    columnNameColumn.ReadOnly = true;
-            //    dgvColumns.Columns.Add(columnNameColumn);
-
-            //    DataGridViewTextBoxColumn orderColumn = new DataGridViewTextBoxColumn();
-            //    orderColumn.Name = "Order";
-            //    orderColumn.HeaderText = "顺序";
-            //    orderColumn.ValueType = typeof(int);
-            //    dgvColumns.Columns.Add(orderColumn);
-
-            //    DataGridViewCheckBoxColumn visibleColumn = new DataGridViewCheckBoxColumn();
-            //    visibleColumn.Name = "Visible";
-            //    visibleColumn.HeaderText = "显示";
-            //    visibleColumn.ReadOnly = false;
-            //    dgvColumns.Columns.Add(visibleColumn);
-
-            //    DataGridViewTextBoxColumn widthColumn = new DataGridViewTextBoxColumn();
-            //    widthColumn.Name = "Width";
-            //    widthColumn.HeaderText = "列宽";
-            //    widthColumn.ValueType = typeof(int);
-            //    dgvColumns.Columns.Add(widthColumn);
-
-            //    // 获取T的所有属性及其ColumnAttribute
-            //    var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            //    foreach (var property in properties)
-            //    {
-            //        // 获取ColumnAttribute
-            //        var columnAttr = property.GetCustomAttribute<ColumnAttribute>();
-
-            //        // 如果没有ColumnAttribute，跳过
-            //        if (columnAttr == null)
-            //            continue;
-
-            //        // 添加行数据
-            //        int rowIndex = dgvColumns.Rows.Add();
-            //        DataGridViewRow row = dgvColumns.Rows[rowIndex];
-
-            //        row.Cells["ColumnName"].Value = (string.IsNullOrEmpty(columnAttr.Title) ? Utility.GetAttributeValueByField<T>("Field", "Name", property.Name) as string : columnAttr.Title) ?? property.Name;
-            //        row.Cells["Order"].Value = columnAttr.Index;
-            //        row.Cells["Visible"].Value = columnAttr.Visible;
-            //        row.Cells["Width"].Value = columnAttr.Width > 0 ? columnAttr.Width : 100;
-
-            //        // 存储属性名称以便后续使用
-            //        row.Tag = property.Name;
-            //    }
-
-            //    // 创建按钮面板 - 使用FlowLayoutPanel自动排列按钮
-            //    FlowLayoutPanel buttonPanel = new FlowLayoutPanel();
-            //    buttonPanel.Dock = DockStyle.Bottom;
-            //    buttonPanel.Height = 50;
-            //    buttonPanel.Padding = new Padding(10);
-            //    buttonPanel.FlowDirection = FlowDirection.RightToLeft;
-            //    buttonPanel.WrapContents = false;
-            //    buttonPanel.AutoSize = true;
-
-            //    // 加载设置按钮
-            //    Button btnLoad = new Button();
-            //    btnLoad.Text = "加载设置";
-            //    btnLoad.BackColor = Color.LightYellow;
-            //    btnLoad.Size = new Size(80, 30);
-            //    btnLoad.Click += (s, args) =>
-            //    {
-            //        LoadColumnConfiguration(dgvColumns);
-            //    };
-
-            //    // 保存设置按钮
-            //    Button btnSave = new Button();
-            //    btnSave.Text = "保存设置";
-            //    btnSave.BackColor = Color.LightYellow;
-            //    btnSave.Size = new Size(80, 30);
-            //    btnSave.Click += (s, args) =>
-            //    {
-            //        SaveColumnConfiguration(dgvColumns);
-            //        MessageBox.Show("列配置已保存！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //    };
-
-            //    // 取消按钮
-            //    Button btnCancel = new Button();
-            //    btnCancel.Text = "取消";
-            //    btnCancel.Size = new Size(80, 30);
-            //    btnCancel.Click += (s, args) => columnConfigForm.Close();
-
-            //    // 确定按钮
-            //    Button btnOK = new Button();
-            //    btnOK.Text = "确定";
-            //    btnOK.Size = new Size(80, 30);
-            //    btnOK.Click += (s, args) =>
-            //    {
-            //        // 应用列配置
-            //        ApplyColumnConfiguration(GetDataGridView1(), dgvColumns);
-            //        columnConfigForm.Close();
-            //    };
-
-            //    // 按从右到左的顺序添加按钮
-            //    buttonPanel.Controls.Add(btnCancel);
-            //    buttonPanel.Controls.Add(btnOK);
-            //    buttonPanel.Controls.Add(btnSave);
-            //    //buttonPanel.Controls.Add(btnLoad);
-
-            //    // 添加控件到窗体
-            //    columnConfigForm.Controls.Add(dgvColumns);
-            //    columnConfigForm.Controls.Add(buttonPanel);
-
-            //    // 窗体显示后自动加载已保存的列配置
-            //    columnConfigForm.Load += (s, e1) =>
-            //    {
-            //        LoadColumnConfiguration(dgvColumns);
-            //        // 按 Order 列升序排序
-            //        dgvColumns.Sort(dgvColumns.Columns["Order"], System.ComponentModel.ListSortDirection.Ascending);
-            //    };
-
-            //    dgvColumns.CellValueChanged += (sender, e) =>
-            //    {
-            //        // 按 Order 列升序排序
-            //        dgvColumns.Sort(dgvColumns.Columns["Order"], System.ComponentModel.ListSortDirection.Ascending);
-            //    };
-
-            //    // 显示窗体
-            //    columnConfigForm.ShowDialog(this);
-            //}
         }
 
         /// <summary>
@@ -817,266 +831,6 @@ namespace com.jiuhuan.plan.view
             string templatePath = Utils.GetTemplateDirectory() + className + ".xls";
             ExcelHelperEx.Print(templatePath, records, 1, "Default");
         }
-
-        /// <summary>
-        /// 应用列配置到DataGridView
-        /// </summary>
-        /// <param name="targetDataGridView">目标DataGridView</param>
-        /// <param name="configDataGridView">配置DataGridView</param>
-        //private void ApplyColumnConfiguration(DataGridView targetDataGridView, DataGridView configDataGridView)
-        //{
-        //    // 创建列表存储列配置信息
-        //    List<ColumnConfigInfo> columnConfigs = new List<ColumnConfigInfo>();
-
-        //    foreach (DataGridViewRow configRow in configDataGridView.Rows)
-        //    {
-        //        string propertyName = configRow.Tag as string;
-        //        if (string.IsNullOrEmpty(propertyName))
-        //            continue;
-
-        //        int order = Convert.ToInt32(configRow.Cells["Order"].Value);
-        //        bool visible = Convert.ToBoolean(configRow.Cells["Visible"].Value);
-        //        int width = Convert.ToInt32(configRow.Cells["Width"].Value);
-
-        //        // 在目标DataGridView中查找对应的列
-        //        DataGridViewColumn column = targetDataGridView.Columns.Cast<DataGridViewColumn>()
-        //            .FirstOrDefault(c => c.DataPropertyName == propertyName);
-
-        //        if (column != null)
-        //        {
-        //            columnConfigs.Add(new ColumnConfigInfo
-        //            {
-        //                Column = column,
-        //                Order = order,
-        //                Visible = visible,
-        //                Width = width
-        //            });
-        //        }
-        //    }
-
-        //    // 根据Order排序
-        //    columnConfigs = columnConfigs.OrderBy(c => c.Order).ToList();
-
-        //    // 应用配置
-        //    foreach (var config in columnConfigs)
-        //    {
-        //        config.Column.DisplayIndex = columnConfigs.IndexOf(config);
-        //        config.Column.Visible = config.Visible;
-        //        if (config.Width > 0)
-        //        {
-        //            config.Column.Width = config.Width;
-        //        }
-        //    }
-
-        //    // 确保 Selection 和 RowNumber 列显示在最前面
-        //    if (targetDataGridView.Columns.Contains("Selection"))
-        //    {
-        //        targetDataGridView.Columns["Selection"].DisplayIndex = 0;
-        //    }
-
-        //    if (targetDataGridView.Columns.Contains("RowNumber"))
-        //    {
-        //        targetDataGridView.Columns["RowNumber"].DisplayIndex = 1;
-        //    }
-        //}
-
-        /// <summary>
-        /// 列配置信息类
-        /// </summary>
-        //private class ColumnConfigInfo
-        //{
-        //    public DataGridViewColumn Column { get; set; }
-        //    public int Order { get; set; }
-        //    public bool Visible { get; set; }
-        //    public int Width { get; set; }
-        //}
-
-        /// <summary>
-        /// 应用列配置到DataGridView（从User.FBuffer加载）
-        /// </summary>
-        /// <param name="targetDataGridView">目标DataGridView</param>
-        /// <param name="config">列配置字典</param>
-        //private void ApplyColumnConfiguration(DataGridView targetDataGridView, Dictionary<string, object> config)
-        //{
-        //    if (config == null || !config.Any())
-        //    {
-        //        return;
-        //    }
-
-        //    // 创建列表存储列配置信息
-        //    List<ColumnConfigInfo> columnConfigs = new List<ColumnConfigInfo>();
-
-        //    // 按属性名分组处理
-        //    var propertyNames = config.Keys
-        //        .Where(k => k.EndsWith("_Visible") || k.EndsWith("_Width") || k.EndsWith("_Order"))
-        //        .Select(k => k.Substring(0, k.LastIndexOf('_')))
-        //        .Distinct();
-
-        //    foreach (string propertyName in propertyNames)
-        //    {
-        //        // 在目标DataGridView中查找对应的列
-        //        DataGridViewColumn column = targetDataGridView.Columns.Cast<DataGridViewColumn>()
-        //            .FirstOrDefault(c => c.DataPropertyName == propertyName);
-
-        //        if (column == null)
-        //        {
-        //            continue;
-        //        }
-
-        //        int order = 0;
-        //        bool visible = true;
-        //        int width = 100;
-
-        //        // 获取Order
-        //        string orderKey = propertyName + "_Order";
-        //        if (config.ContainsKey(orderKey))
-        //        {
-        //            order = Convert.ToInt32(config[orderKey]);
-        //        }
-
-        //        // 获取Visible
-        //        string visibleKey = propertyName + "_Visible";
-        //        if (config.ContainsKey(visibleKey))
-        //        {
-        //            visible = Convert.ToBoolean(config[visibleKey]);
-        //        }
-
-        //        // 获取Width
-        //        string widthKey = propertyName + "_Width";
-        //        if (config.ContainsKey(widthKey))
-        //        {
-        //            width = Convert.ToInt32(config[widthKey]);
-        //        }
-
-        //        columnConfigs.Add(new ColumnConfigInfo
-        //        {
-        //            Column = column,
-        //            Order = order,
-        //            Visible = visible,
-        //            Width = width
-        //        });
-        //    }
-
-        //    // 根据Order排序
-        //    columnConfigs = columnConfigs.OrderBy(c => c.Order).ToList();
-
-        //    // 应用配置
-        //    for (int i = 0; i < columnConfigs.Count; i++)
-        //    {
-        //        columnConfigs[i].Column.DisplayIndex = i;
-        //        columnConfigs[i].Column.Visible = columnConfigs[i].Visible;
-        //        if (columnConfigs[i].Width > 0)
-        //        {
-        //            columnConfigs[i].Column.Width = columnConfigs[i].Width;
-        //        }
-        //    }
-
-        //    // 确保 Selection 和 RowNumber 列显示在最前面
-        //    if (targetDataGridView.Columns.Contains("Selection"))
-        //    {
-        //        targetDataGridView.Columns["Selection"].DisplayIndex = 0;
-        //    }
-
-        //    if (targetDataGridView.Columns.Contains("RowNumber"))
-        //    {
-        //        targetDataGridView.Columns["RowNumber"].DisplayIndex = 1;
-        //    }
-        //}
-
-        /// <summary>
-        /// 保存列配置到User.FBuffer
-        /// </summary>
-        /// <param name="configDataGridView">配置DataGridView</param>
-        //private void SaveColumnConfiguration(DataGridView configDataGridView)
-        //{
-        //    try
-        //    {
-        //        // 构建配置字典
-        //        Dictionary<string, object> columnConfig = new Dictionary<string, object>();
-
-        //        foreach (DataGridViewRow row in configDataGridView.Rows)
-        //        {
-        //            string propertyName = row.Tag as string;
-        //            if (string.IsNullOrEmpty(propertyName))
-        //                continue;
-
-        //            // 保存顺序、可见性和列宽
-        //            columnConfig[propertyName + "_Order"] = Convert.ToInt32(row.Cells["Order"].Value);
-        //            columnConfig[propertyName + "_Visible"] = Convert.ToBoolean(row.Cells["Visible"].Value);
-        //            columnConfig[propertyName + "_Width"] = Convert.ToInt32(row.Cells["Width"].Value);
-        //        }
-
-        //        // 使用User.FBuffer保存配置，键名包含类型信息以避免冲突
-        //        string configKey = typeof(T).FullName;
-        //        user.SetSettings(configKey, columnConfig);
-        //        DaoTemplate.Save(user);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"保存列配置失败：{ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
-
-        /// <summary>
-        /// 从User.FBuffer加载列配置
-        /// </summary>
-        /// <param name="configDataGridView">配置DataGridView</param>
-        //private void LoadColumnConfiguration(DataGridView configDataGridView)
-        //{
-        //    try
-        //    {
-        //        // 从User.FBuffer获取配置
-        //        string configKey = typeof(T).FullName;
-        //        var valueConfig = user.GetSettings(configKey);
-
-        //        if (valueConfig == null)
-        //        {
-        //            //MessageBox.Show("没有找到保存的列配置！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //            return;
-        //        }
-
-        //        Dictionary<string, object> savedConfig = null;
-        //        if (valueConfig is Dictionary<string, object> vc)
-        //            savedConfig = vc;
-        //        else
-        //            savedConfig = JsonHelper.toObject<Dictionary<string, object>>(valueConfig.ToString());
-
-        //        // 应用配置到DataGridView
-        //        foreach (DataGridViewRow row in configDataGridView.Rows)
-        //        {
-        //            string propertyName = row.Tag as string;
-        //            if (string.IsNullOrEmpty(propertyName))
-        //                continue;
-
-        //            // 加载顺序
-        //            string orderKey = propertyName + "_Order";
-        //            if (savedConfig.ContainsKey(orderKey))
-        //            {
-        //                row.Cells["Order"].Value = Convert.ToInt32(savedConfig[orderKey]);
-        //            }
-
-        //            // 加载可见性
-        //            string visibleKey = propertyName + "_Visible";
-        //            if (savedConfig.ContainsKey(visibleKey))
-        //            {
-        //                row.Cells["Visible"].Value = Convert.ToBoolean(savedConfig[visibleKey]);
-        //            }
-
-        //            // 加载列宽
-        //            string widthKey = propertyName + "_Width";
-        //            if (savedConfig.ContainsKey(widthKey))
-        //            {
-        //                row.Cells["Width"].Value = Convert.ToInt32(savedConfig[widthKey]);
-        //            }
-        //        }
-
-        //        //MessageBox.Show("列配置已加载！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"加载列配置失败：{ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
 
         /// <summary>
         /// 选择打印模板
@@ -1225,10 +979,77 @@ namespace com.jiuhuan.plan.view
             }
 
             DaoTemplate.CreateTable<T>();
+
             if (null != DaoTemplate.SqlException)
                 MessageBox.Show($"数据库初始化失败！{DaoTemplate.SqlException.Message}", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
                 MessageBox.Show("数据库初始化完成！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // 检查T类型是否包含OneToMany特性，如果有则创建关联表的数据库结构
+            // 检查T类型的所有属性字段是否包含OneToMany特性
+            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var property in properties)
+            {
+                // 获取属性上的OneToMany特性
+                var oneToManyAttr = property.GetCustomAttribute<OneToManyAttribute>(true);
+
+                if (oneToManyAttr != null)
+                {
+                    // 获取OneToMany特性中指定的子实体类型
+                    Type childEntityType = oneToManyAttr.ChildType;
+                    if (childEntityType != null)
+                    {
+                        // 创建子实体对应的数据库表
+                        var sql = DaoTemplate.CreateTable(childEntityType);
+
+                        // 检查创建过程中是否有异常
+                        if (null != DaoTemplate.SqlException)
+                        {
+                            MessageBox.Show($"创建关联表 {childEntityType.Name} 失败：{DaoTemplate.SqlException.Message}", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // 检查T类型是否包含ManyToMany特性，如果有则创建中间表
+            foreach (var property in properties)
+            {
+                // 获取属性上的ManyToMany特性
+                var manyToManyAttr = property.GetCustomAttribute<ManyToManyAttribute>(true);
+
+                if (manyToManyAttr != null)
+                {
+                    // 获取中间表名称
+                    string mappingTable = manyToManyAttr.MappingTable;
+                    Type childType = manyToManyAttr.ChildType;
+                    string joinColumn = manyToManyAttr.JoinColumn;
+                    string mappedBy = manyToManyAttr.MappedBy;
+
+                    if (!string.IsNullOrEmpty(mappingTable) && !string.IsNullOrEmpty(joinColumn) && !string.IsNullOrEmpty(mappedBy))
+                    {
+                        // 构建中间表字段名：实体名_字段名
+                        string parentEntityFieldName = $"{typeof(T).Name}_{joinColumn}";
+                        string childEntityFieldName = $"{childType.Name}_{mappedBy}";
+
+                        // 创建中间表的SQL语句
+                        string createMappingTableSql = $@"
+                            IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '{mappingTable}')
+                            CREATE TABLE [{mappingTable}] (
+                                [{parentEntityFieldName}] NVARCHAR(200),
+                                [{childEntityFieldName}] NVARCHAR(200)
+                            )";
+
+                        DaoTemplate.ExecuteNonQuery(createMappingTableSql);
+
+                        if (null != DaoTemplate.SqlException)
+                        {
+                            MessageBox.Show($"创建中间表 {mappingTable} 失败：{DaoTemplate.SqlException.Message}", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+                }
+            }
         }
 
         public int GetPageSize()
@@ -1357,6 +1178,214 @@ namespace com.jiuhuan.plan.view
                 _currentPage = pageNumber;
                 DisplayCurrentPage();
                 UpdatePageInfo();
+            }
+        }
+
+        /// <summary>
+        /// 删除旧的子实体数据
+        /// </summary>
+        /// <param name="parentRecord">父记录对象</param>
+        /// <param name="property">被 OneToMany 特性修饰的属性</param>
+        /// <param name="oneToManyAttr">OneToMany 特性对象</param>
+        private void DeleteOldChildEntities(T parentRecord, PropertyInfo property, OneToManyAttribute oneToManyAttr)
+        {
+            if (parentRecord == null || property == null || oneToManyAttr == null)
+                return;
+
+            try
+            {
+                // 获取 OneToMany 特性的配置
+                string joinColumn = oneToManyAttr.JoinColumn;
+                string mappedBy = oneToManyAttr.MappedBy;
+                Type childType = oneToManyAttr.ChildType;
+
+                if (string.IsNullOrEmpty(joinColumn) || string.IsNullOrEmpty(mappedBy))
+                {
+                    Console.WriteLine($"属性 {property.Name} 的 OneToMany 特性未正确配置 JoinColumn 或 MappedBy");
+                    return;
+                }
+
+                // 获取父记录中 joinColumn 字段的值
+                var joinColumnProperty = typeof(T).GetProperty(joinColumn);
+                if (joinColumnProperty == null)
+                {
+                    Console.WriteLine($"父记录中未找到字段 {joinColumn}");
+                    return;
+                }
+
+                object parentKeyValue = joinColumnProperty.GetValue(parentRecord);
+
+                if (parentKeyValue == null)
+                {
+                    Console.WriteLine($"父记录的 {joinColumn} 字段值为空，跳过删除旧数据");
+                    return;
+                }
+
+                // 构建删除 SQL：删除旧的子实体数据
+                string tableName = childType.Name;
+                string formattedValue = DaoTemplate.FormatSqlValue(parentKeyValue);
+                string deleteSql = $"DELETE FROM [{tableName}] WHERE [{mappedBy}] = {formattedValue}";
+
+                // 执行删除操作
+                int deletedCount = DaoTemplate.ExecuteNonQuery(deleteSql);
+                Console.WriteLine($"删除旧子实体数据：{deletedCount} 行");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"删除旧子实体数据时出错: {ex.Message}");
+                // 不抛出异常，避免阻断主流程
+            }
+        }
+
+        /// <summary>
+        /// 保存多对多关联数据到中间表
+        /// 中间表字段命名规则：实体名_关联字段名，如 Department_FNumber、User_FName
+        /// </summary>
+        /// <param name="parentRecord">父记录对象</param>
+        /// <param name="property">被 ManyToMany 特性修饰的属性</param>
+        /// <param name="manyToManyAttr">ManyToMany 特性对象</param>
+        private void SaveManyToManyRelationships(T parentRecord, PropertyInfo property, ManyToManyAttribute manyToManyAttr)
+        {
+            if (parentRecord == null || property == null || manyToManyAttr == null)
+                return;
+
+            try
+            {
+                // 获取 ManyToMany 特性的配置
+                string mappingTable = manyToManyAttr.MappingTable;
+                string joinColumn = manyToManyAttr.JoinColumn;
+                string mappedBy = manyToManyAttr.MappedBy;
+                Type childType = manyToManyAttr.ChildType;
+
+                if (string.IsNullOrEmpty(mappingTable) || string.IsNullOrEmpty(joinColumn) || string.IsNullOrEmpty(mappedBy))
+                {
+                    Console.WriteLine($"属性 {property.Name} 的 ManyToMany 特性未正确配置 MappingTable、JoinColumn 或 MappedBy");
+                    return;
+                }
+
+                // 获取父记录中 joinColumn 字段的值
+                var joinColumnProperty = typeof(T).GetProperty(joinColumn);
+                if (joinColumnProperty == null)
+                {
+                    Console.WriteLine($"父记录中未找到字段 {joinColumn}");
+                    return;
+                }
+
+                object parentKeyValue = joinColumnProperty.GetValue(parentRecord);
+
+                if (parentKeyValue == null)
+                {
+                    Console.WriteLine($"父记录的 {joinColumn} 字段值为空，跳过保存中间表数据");
+                    return;
+                }
+
+                // 获取子实体列表
+                var childList = property.GetValue(parentRecord) as System.Collections.IList;
+
+                if (childList == null || childList.Count == 0)
+                {
+                    Console.WriteLine($"属性 {property.Name} 的关联数据为空，跳过保存中间表数据");
+                    return;
+                }
+
+                // 构建中间表字段名：实体名_字段名
+                string parentEntityFieldName = $"{typeof(T).Name}_{joinColumn}";
+                string childEntityFieldName = $"{childType.Name}_{mappedBy}";
+
+                string formattedParentValue = DaoTemplate.FormatSqlValue(parentKeyValue);
+
+                // 遍历子实体列表，逐条插入中间表
+                int insertedCount = 0;
+                foreach (var childItem in childList)
+                {
+                    // 获取子实体中 mappedBy 字段的值
+                    var mappedByProperty = childType.GetProperty(mappedBy);
+                    if (mappedByProperty == null)
+                    {
+                        Console.WriteLine($"关联实体 {childType.Name} 中未找到字段 {mappedBy}");
+                        continue;
+                    }
+
+                    object childKeyValue = mappedByProperty.GetValue(childItem);
+
+                    if (childKeyValue == null)
+                    {
+                        continue;
+                    }
+
+                    string formattedChildValue = DaoTemplate.FormatSqlValue(childKeyValue);
+
+                    // 插入中间表记录
+                    string insertSql = $"INSERT INTO [{mappingTable}] ([{parentEntityFieldName}], [{childEntityFieldName}]) VALUES ({formattedParentValue}, {formattedChildValue})";
+                    DaoTemplate.ExecuteNonQuery(insertSql);
+                    insertedCount++;
+                }
+
+                Console.WriteLine($"保存多对多关联数据到中间表 {mappingTable}：{insertedCount} 条记录");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"保存多对多关联数据时出错: {ex.Message}");
+                // 不抛出异常，避免阻断主流程
+            }
+        }
+
+        /// <summary>
+        /// 删除多对多关联数据（从中间表中删除与父记录关联的所有关系记录）
+        /// 中间表字段命名规则：实体名_关联字段名，如 Department_FNumber、User_FName
+        /// </summary>
+        /// <param name="parentRecord">父记录对象</param>
+        /// <param name="property">被 ManyToMany 特性修饰的属性</param>
+        /// <param name="manyToManyAttr">ManyToMany 特性对象</param>
+        private void DeleteManyToManyRelationships(T parentRecord, PropertyInfo property, ManyToManyAttribute manyToManyAttr)
+        {
+            if (parentRecord == null || property == null || manyToManyAttr == null)
+                return;
+
+            try
+            {
+                // 获取 ManyToMany 特性的配置
+                string mappingTable = manyToManyAttr.MappingTable;
+                string joinColumn = manyToManyAttr.JoinColumn;
+                Type childType = manyToManyAttr.ChildType;
+
+                if (string.IsNullOrEmpty(mappingTable) || string.IsNullOrEmpty(joinColumn))
+                {
+                    Console.WriteLine($"属性 {property.Name} 的 ManyToMany 特性未正确配置 MappingTable 或 JoinColumn");
+                    return;
+                }
+
+                // 获取父记录中 joinColumn 字段的值
+                var joinColumnProperty = typeof(T).GetProperty(joinColumn);
+                if (joinColumnProperty == null)
+                {
+                    Console.WriteLine($"父记录中未找到字段 {joinColumn}");
+                    return;
+                }
+
+                object parentKeyValue = joinColumnProperty.GetValue(parentRecord);
+
+                if (parentKeyValue == null)
+                {
+                    Console.WriteLine($"父记录的 {joinColumn} 字段值为空，跳过删除中间表数据");
+                    return;
+                }
+
+                // 构建中间表字段名：实体名_字段名
+                string parentEntityFieldName = $"{typeof(T).Name}_{joinColumn}";
+
+                // 构建删除 SQL：删除中间表中与父记录关联的所有记录
+                string formattedValue = DaoTemplate.FormatSqlValue(parentKeyValue);
+                string deleteSql = $"DELETE FROM [{mappingTable}] WHERE [{parentEntityFieldName}] = {formattedValue}";
+
+                // 执行删除操作
+                int deletedCount = DaoTemplate.ExecuteNonQuery(deleteSql);
+                Console.WriteLine($"删除中间表 {mappingTable} 关联数据：{deletedCount} 条记录");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"删除多对多关联数据时出错: {ex.Message}");
+                // 不抛出异常，避免阻断主流程
             }
         }
     }

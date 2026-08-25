@@ -1,7 +1,7 @@
 ﻿
 namespace com.jiuhuan.plan.view
 {
-    partial class DepartmentForm
+    partial class UserForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DepartmentForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserForm));
             this.panel2 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel5 = new System.Windows.Forms.Panel();

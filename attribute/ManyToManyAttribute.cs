@@ -6,7 +6,7 @@ namespace com.jiuhuan.plan
     /// 
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public class OneToManyAttribute : Attribute
+    public class ManyToManyAttribute : Attribute
     {
         public string Title { get; set; }        //标题，必须与EditForm中TabControl中的tabPage的标题一致
 
@@ -20,15 +20,18 @@ namespace com.jiuhuan.plan
 
         public string JoinColumn { get; set; }   //外键，关联方-字段
 
+        public string MappingTable { get; set; } //中间表，保存多对多关系
+
         public string Description { get; set; }
 
-        public OneToManyAttribute()
+        public ManyToManyAttribute()
         {
         }
 
-        public OneToManyAttribute(Type childType, string mappedBy, string joinColumn = "", string title = "", string importSql = "", string [] parameter = null, string description = "")
+        public ManyToManyAttribute(Type childType, string mappingTable, string mappedBy, string joinColumn, string title, string importSql = "", string [] parameter = null, string description = "")
         {
             this.ChildType = childType;
+            this.MappingTable = mappingTable;
             this.MappedBy = mappedBy;
             this.JoinColumn = joinColumn;
             this.Title = title;

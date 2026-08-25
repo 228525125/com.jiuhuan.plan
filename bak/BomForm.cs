@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace com.jiuhuan.plan.view
 {
-    public partial class BomForm : GridViewForm<Bom>
+    public partial class BomForm : GridViewForm4<Bom>
     {
         public BomForm()
         {

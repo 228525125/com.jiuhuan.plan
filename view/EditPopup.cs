@@ -56,6 +56,9 @@ namespace com.jiuhuan.plan.view
             // 处理 OneToMany 关联数据的加载
             LoadOneToManyData(record);
 
+            // 处理 ManyToMany 关联数据的加载
+            LoadManyToManyData(record);
+
             // 填充所有控件的值
             CreateControlsFromAttributes(record, GetFlowLayoutPanel());
 
@@ -308,6 +311,112 @@ namespace com.jiuhuan.plan.view
         }
 
         /// <summary>
+        /// 加载 ManyToMany 关联数据（通过中间表查询多对多关系）
+        /// 中间表命名规则：实体名_关联实体名，如 Department_User
+        /// 中间表字段命名规则：实体名_关联字段名，如 Department_FNumber、User_FName
+        /// </summary>
+        /// <param name="record">父记录对象</param>
+        private void LoadManyToManyData(T record)
+        {
+            if (record == null) return;
+
+            Type recordType = typeof(T);
+            var properties = recordType.GetProperties();
+
+            foreach (var property in properties)
+            {
+                // 检查是否包含 ManyToMany 特性
+                var manyToManyAttr = Attribute.GetCustomAttribute(property, typeof(ManyToManyAttribute)) as ManyToManyAttribute;
+
+                if (manyToManyAttr != null)
+                {
+                    try
+                    {
+                        // 获取关联实体类型
+                        Type childType = manyToManyAttr.ChildType;
+
+                        // 获取中间表名称
+                        string mappingTable = manyToManyAttr.MappingTable;
+                        // 获取关联方字段名（当前实体的字段）和被关联方字段名（子实体的字段）
+                        string joinColumn = manyToManyAttr.JoinColumn;
+                        string mappedBy = manyToManyAttr.MappedBy;
+
+                        if (string.IsNullOrEmpty(mappingTable) || string.IsNullOrEmpty(joinColumn) || string.IsNullOrEmpty(mappedBy))
+                        {
+                            Console.WriteLine($"属性 {property.Name} 的 ManyToMany 特性未正确配置 MappingTable、JoinColumn 或 MappedBy");
+                            continue;
+                        }
+
+                        // 获取当前父记录的 joinColumn 字段值
+                        var joinColumnProperty = recordType.GetProperty(joinColumn);
+                        if (joinColumnProperty == null)
+                        {
+                            Console.WriteLine($"父记录中未找到字段 {joinColumn}");
+                            continue;
+                        }
+
+                        object parentKeyValue = joinColumnProperty.GetValue(record);
+
+                        if (parentKeyValue == null)
+                        {
+                            // 如果父记录的关键字段为空，初始化为空列表
+                            var lt = typeof(List<>).MakeGenericType(childType);
+                            var emptyList = Activator.CreateInstance(lt);
+                            property.SetValue(record, emptyList);
+                            continue;
+                        }
+
+                        // 获取关联实体的表名
+                        string childTableName = UV.GetTableName(childType);
+                        if (string.IsNullOrEmpty(childTableName))
+                        {
+                            Console.WriteLine($"无法获取关联实体 {childType.Name} 的表名");
+                            continue;
+                        }
+
+                        // 构建中间表字段名：实体名_字段名
+                        string parentEntityFieldName = $"{recordType.Name}_{joinColumn}";
+                        string childEntityFieldName = $"{childType.Name}_{mappedBy}";
+
+                        // 构建SQL查询：通过中间表关联查询
+                        string formattedValue = DaoTemplate.FormatSqlValue(parentKeyValue);
+                        string sql = $"SELECT [{childTableName}].* FROM [{childTableName}] " +
+                                     $"INNER JOIN [{mappingTable}] ON [{childTableName}].[{mappedBy}] = [{mappingTable}].[{childEntityFieldName}] " +
+                                     $"WHERE [{mappingTable}].[{parentEntityFieldName}] = {formattedValue}";
+
+                        // 执行查询
+                        List<Dictionary<string, object>> rows = DaoTemplate.FindAll(sql);
+
+                        // 将 Dictionary 列表转换为实体列表
+                        var listType = typeof(List<>).MakeGenericType(childType);
+                        var resultList = Activator.CreateInstance(listType) as System.Collections.IList;
+
+                        foreach (var row in rows)
+                        {
+                            object entity = UV.ConvertDictionaryToEntity(row, childType);
+                            if (entity != null)
+                            {
+                                resultList.Add(entity);
+                            }
+                        }
+
+                        // 将结果赋值给属性
+                        property.SetValue(record, resultList);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"加载 ManyToMany 属性 {property.Name} 时出错: {ex.Message}");
+                        // 出错时初始化为空列表，避免空引用异常
+                        var childType = manyToManyAttr.ChildType;
+                        var listType = typeof(List<>).MakeGenericType(childType);
+                        var emptyList = Activator.CreateInstance(listType);
+                        property.SetValue(record, emptyList);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// 从控件中提取数据并更新Record对象
         /// </summary>
         protected virtual void UpdateRecordFromControls()
@@ -425,6 +534,115 @@ namespace com.jiuhuan.plan.view
                         Console.WriteLine($"更新 OneToMany 属性 {property.Name} 时出错: {ex.Message}");
                     }
                     
+                    // 跳过后续的普通控件处理
+                    continue;
+                }
+
+                // 检查是否包含 ManyToMany 特性
+                var manyToManyAttr = Attribute.GetCustomAttribute(property, typeof(ManyToManyAttribute)) as ManyToManyAttribute;
+
+                if (manyToManyAttr != null)
+                {
+                    // 处理 ManyToMany 特性修饰的属性
+                    try
+                    {
+                        // 获取当前选中的 TabPage 标题
+                        string currentTabTitle = manyToManyAttr.Title;
+
+                        if (string.IsNullOrEmpty(currentTabTitle))
+                        {
+                            Console.WriteLine($"属性 {property.Name} 的 ManyToMany 特性未设置 Title");
+                            continue;
+                        }
+
+                        // 在整个表单中递归查找 TabControl
+                        TabControl tabControl = UV.FindControlRecursive<TabControl>(this);
+                        if (tabControl == null)
+                        {
+                            Console.WriteLine($"未找到 TabControl，无法处理属性 {property.Name}");
+                            continue;
+                        }
+
+                        // 查找与 ManyToMany Title 匹配的 TabPage
+                        TabPage targetTabPage = null;
+                        foreach (TabPage tabPage in tabControl.TabPages)
+                        {
+                            if (string.Equals(tabPage.Text, currentTabTitle, StringComparison.OrdinalIgnoreCase))
+                            {
+                                targetTabPage = tabPage;
+                                break;
+                            }
+                        }
+
+                        if (targetTabPage == null)
+                        {
+                            Console.WriteLine($"未找到标题为 '{currentTabTitle}' 的 TabPage，无法处理属性 {property.Name}");
+                            continue;
+                        }
+
+                        // 从 TabPage 中查找 DataGridView 控件
+                        DataGridView dataGridView = UV.FindDataGridViewInTabPage(targetTabPage);
+                        if (dataGridView == null)
+                        {
+                            Console.WriteLine($"在 TabPage '{currentTabTitle}' 中未找到 DataGridView 控件，无法处理属性 {property.Name}");
+                            continue;
+                        }
+
+                        // 获取 DataGridView 中的所有行数据并转换为实体列表
+                        List<object> entityList = new List<object>();
+                        Type childType = manyToManyAttr.ChildType;
+
+                        foreach (DataGridViewRow row in dataGridView.Rows)
+                        {
+                            // 跳过新行（AllowUserToAddRows 产生的空行）
+                            if (row.IsNewRow)
+                                continue;
+
+                            // 直接从 DataGridView 单元格构建实体
+                            object entity = UV.CreateEntityFromDataGridViewRow(row, childType);
+                            if (entity != null)
+                            {
+                                entityList.Add(entity);
+                            }
+                        }
+
+                        // 将实体列表转换为正确的类型并赋值给属性
+                        if (property.PropertyType.IsGenericType &&
+                            property.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
+                        {
+                            // 创建 List<T> 实例
+                            Type listType = typeof(List<>).MakeGenericType(childType);
+                            object listInstance = Activator.CreateInstance(listType);
+
+                            // 调用 Add 方法添加所有实体
+                            MethodInfo addMethod = listType.GetMethod("Add");
+                            foreach (var item in entityList)
+                            {
+                                if (childType.IsAssignableFrom(item.GetType()))
+                                {
+                                    addMethod.Invoke(listInstance, new object[] { item });
+                                }
+                            }
+
+                            // 设置属性值
+                            property.SetValue(record, listInstance);
+                        }
+                        else if (property.PropertyType.IsArray)
+                        {
+                            // 如果是数组类型，转换为数组
+                            Array array = Array.CreateInstance(childType, entityList.Count);
+                            for (int i = 0; i < entityList.Count; i++)
+                            {
+                                array.SetValue(entityList[i], i);
+                            }
+                            property.SetValue(record, array);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"更新 ManyToMany 属性 {property.Name} 时出错: {ex.Message}");
+                    }
+
                     // 跳过后续的普通控件处理
                     continue;
                 }
@@ -800,6 +1018,59 @@ namespace com.jiuhuan.plan.view
                 foreach (TabPage tabPage in tabControl.TabPages)
                 {
                     if (string.Equals(tabPage.Text, oneToManyAttr.Title, StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetTabPage = tabPage;
+                        break;
+                    }
+                }
+
+                if (targetTabPage == null)
+                    continue;
+
+                // 从 TabPage 中查找 DataGridView 控件
+                DataGridView dataGridView = UV.FindDataGridViewInTabPage(targetTabPage);
+                if (dataGridView == null)
+                    continue;
+
+                // 获取属性值作为数据源
+                var dataSource = property.GetValue(this.record);
+                if (dataSource != null)
+                {
+                    // 如果数据源是 IList，检查是否为空
+                    if (dataSource is IList list && list.Count == 0)
+                    {
+                        // 列表为空，不设置数据源或设置为空，避免显示空白行
+                        dataGridView.DataSource = null;
+                    }
+                    else
+                    {
+                        // 设置 DataGridView 的数据源
+                        dataGridView.DataSource = dataSource;
+                    }
+                }
+            }
+
+            // 查找所有被 ManyToMany 特性修饰的属性，并绑定对应的 DataGridView 数据源
+            var manyToManyProperties = typeof(T).GetProperties()
+                .Where(p => Attribute.IsDefined(p, typeof(ManyToManyAttribute)))
+                .ToList();
+
+            foreach (var property in manyToManyProperties)
+            {
+                var manyToManyAttr = property.GetCustomAttribute<ManyToManyAttribute>();
+                if (manyToManyAttr == null || string.IsNullOrEmpty(manyToManyAttr.Title))
+                    continue;
+
+                // 在整个表单中递归查找 TabControl
+                TabControl tabControl = UV.FindControlRecursive<TabControl>(this);
+                if (tabControl == null)
+                    continue;
+
+                // 查找与 ManyToMany Title 匹配的 TabPage
+                TabPage targetTabPage = null;
+                foreach (TabPage tabPage in tabControl.TabPages)
+                {
+                    if (string.Equals(tabPage.Text, manyToManyAttr.Title, StringComparison.OrdinalIgnoreCase))
                     {
                         targetTabPage = tabPage;
                         break;
@@ -1568,6 +1839,100 @@ namespace com.jiuhuan.plan.view
                     // 释放弹窗资源
                     popupForm.Dispose();
                 });
+
+                // 已处理匹配的特性，跳出循环
+                return;
+            }
+
+            // 如果未找到匹配的 OneToMany 特性，尝试查找 ManyToMany
+            foreach (var property in properties)
+            {
+                // 检查是否包含 ManyToMany 特性
+                var manyToManyAttr = property.GetCustomAttributes(typeof(ManyToManyAttribute), false).FirstOrDefault() as ManyToManyAttribute;
+                if (manyToManyAttr == null)
+                {
+                    continue;
+                }
+
+                // 判断 ManyToMany 的 Title 是否与当前 Tab 标题一致
+                if (!string.Equals(manyToManyAttr.Title, currentTabTitle, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                // 判断是否有 PopupAttribute 特性
+                var popupAttr2 = property.GetCustomAttributes(typeof(PopupAttribute), false).FirstOrDefault() as PopupAttribute;
+                if (popupAttr2 == null)
+                {
+                    continue;
+                }
+
+                OpenPopup(popupAttr2, (popupForm) =>
+                {
+                    Type popupType = popupAttr2.Type;
+                    List<Dictionary<string, object>> selectedItems = new List<Dictionary<string, object>>();
+
+                    // 尝试从弹窗获取选中的数据
+                    MethodInfo getSelectedItemsMethod = popupType.GetMethod("GetSelectedItems");
+                    if (getSelectedItemsMethod != null)
+                    {
+                        string jsonString = getSelectedItemsMethod.Invoke(popupForm, null) as string;
+                        selectedItems = JsonHelper.toObject<List<Dictionary<string, object>>>(jsonString);
+                    }
+
+                    // 如果有选中的数据，添加到DataGridView中
+                    if (selectedItems != null && selectedItems.Count > 0)
+                    {
+                        // 检查 DataGridView 的数据源类型
+                        object dataSource = dataGridView.DataSource;
+                        DataTable dataTable = null;
+                        IList listDataSource = null;
+                        Type listElementType = null;
+
+                        if (dataSource is DataTable dt)
+                        {
+                            dataTable = dt;
+                        }
+                        else if (dataSource is IList list && list.Count > 0)
+                        {
+                            listDataSource = list;
+                            listElementType = list[0].GetType();
+                        }
+
+                        if (popupAttr2.IsMultipleColumnReturn)
+                        {
+                            if (popupAttr2.AllowMultipleRowSelection)
+                            {
+                                foreach (var item in selectedItems)
+                                {
+                                    UV.AddItemToDataGridView(dataGridView, dataTable, listDataSource, listElementType, item, popupAttr2.Return);
+                                }
+                            }
+                            else
+                            {
+                                var firstItem = selectedItems[0];
+                                UV.AddItemToDataGridView(dataGridView, dataTable, listDataSource, listElementType, firstItem, popupAttr2.Return);
+                            }
+                        }
+                        else
+                        {
+                            if (popupAttr2.AllowMultipleRowSelection)
+                            {
+                                foreach (var item in selectedItems)
+                                {
+                                    UV.AddItemToDataGridView(dataGridView, dataTable, listDataSource, listElementType, item, popupAttr2.Return);
+                                }
+                            }
+                            else
+                            {
+                                var firstItem = selectedItems[0];
+                                UV.AddItemToDataGridView(dataGridView, dataTable, listDataSource, listElementType, firstItem, popupAttr2.Return);
+                            }
+                        }
+                    }
+
+                    popupForm.Dispose();
+                });
             }
         }
 
@@ -1604,11 +1969,14 @@ namespace com.jiuhuan.plan.view
                 // 检查该属性是否被 OneToMany 特性修饰
                 var oneToManyAttr = Attribute.GetCustomAttribute(targetProperty, typeof(OneToManyAttribute)) as OneToManyAttribute;
 
-                if (oneToManyAttr == null)
+                // 检查该属性是否被 ManyToMany 特性修饰
+                var manyToManyAttr = Attribute.GetCustomAttribute(targetProperty, typeof(ManyToManyAttribute)) as ManyToManyAttribute;
+
+                if (oneToManyAttr == null && manyToManyAttr == null)
                     return queryResult;
 
-                // 获取子实体类型
-                Type childType = oneToManyAttr.ChildType;
+                // 获取子实体类型（根据特性类型获取）
+                Type childType = oneToManyAttr != null ? oneToManyAttr.ChildType : manyToManyAttr.ChildType;
 
                 // 获取 T 类型中所有被 Keyword 特性修饰的属性
                 List<PropertyInfo> keywordProperties = new List<PropertyInfo>();
@@ -1785,8 +2153,11 @@ namespace com.jiuhuan.plan.view
 
                 // 检查该属性是否被 OneToMany 特性修饰
                 var oneToManyAttr = Attribute.GetCustomAttribute(targetProperty, typeof(OneToManyAttribute)) as OneToManyAttribute;
-                
-                if (oneToManyAttr == null)
+
+                // 检查该属性是否被 ManyToMany 特性修饰
+                var manyToManyAttr = Attribute.GetCustomAttribute(targetProperty, typeof(ManyToManyAttribute)) as ManyToManyAttribute;
+
+                if (oneToManyAttr == null && manyToManyAttr == null)
                     return queryResult;
 
                 // 获取当前记录中该属性的现有数据列表
@@ -1795,8 +2166,8 @@ namespace com.jiuhuan.plan.view
                 if (existingList == null || existingList.Count == 0)
                     return queryResult;
 
-                // 获取子实体类型
-                Type childType = oneToManyAttr.ChildType;
+                // 获取子实体类型（根据特性类型获取）
+                Type childType = oneToManyAttr != null ? oneToManyAttr.ChildType : manyToManyAttr.ChildType;
                 
                 // 获取 childType 中所有被 Keyword 特性修饰的属性
                 List<PropertyInfo> keywordProperties = new List<PropertyInfo>();

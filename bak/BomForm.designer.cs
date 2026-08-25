@@ -1,7 +1,7 @@
 ﻿
 namespace com.jiuhuan.plan.view
 {
-    partial class DepartmentForm
+    partial class BomForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,10 +29,11 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DepartmentForm));
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.panel5 = new System.Windows.Forms.Panel();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BomForm));
+            this.FRemainQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.FFixed1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -49,17 +50,16 @@ namespace com.jiuhuan.plan.view
             this.Column24 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FRemainQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column19 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column20 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.panel5 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label6 = new System.Windows.Forms.Label();
             this.button8 = new System.Windows.Forms.Button();
@@ -95,95 +95,91 @@ namespace com.jiuhuan.plan.view
             this.dataGridViewTextBoxColumn20 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn21 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn22 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-            this.新增ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.加载ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.打印ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.编辑打印模板ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.打印ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripDropDownButton4 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.导出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.查询实体ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.导入ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.加载ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.新增ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
             this.查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.恢复底稿ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.分屏ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripDropDownButton3 = new System.Windows.Forms.ToolStripDropDownButton();
             this.删除选中行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.显示隐藏列ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.全选ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripDropDownButton4 = new System.Windows.Forms.ToolStripDropDownButton();
-            this.导出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.打印ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.编辑打印模板ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.打印ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.查询实体ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripDropDownButton5 = new System.Windows.Forms.ToolStripDropDownButton();
             this.保存到数据库ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.重置ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.初始化ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.panel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
-            this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel2
+            // FRemainQty
             // 
-            this.panel2.Controls.Add(this.splitContainer1);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 125);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1266, 497);
-            this.panel2.TabIndex = 5;
+            this.FRemainQty.DataPropertyName = "FRemainQty";
+            this.FRemainQty.HeaderText = "待加工数量";
+            this.FRemainQty.MinimumWidth = 6;
+            this.FRemainQty.Name = "FRemainQty";
+            this.FRemainQty.Width = 125;
             // 
-            // splitContainer1
+            // Column6
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.Column6.DataPropertyName = "FModel";
+            this.Column6.HeaderText = "规格";
+            this.Column6.MinimumWidth = 6;
+            this.Column6.Name = "Column6";
+            this.Column6.ReadOnly = true;
+            this.Column6.Width = 125;
             // 
-            // splitContainer1.Panel1
+            // Column5
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.panel5);
-            this.splitContainer1.Panel1.Controls.Add(this.panel3);
+            this.Column5.DataPropertyName = "FName";
+            this.Column5.HeaderText = "品名";
+            this.Column5.MinimumWidth = 6;
+            this.Column5.Name = "Column5";
+            this.Column5.ReadOnly = true;
+            this.Column5.Width = 125;
             // 
-            // splitContainer1.Panel2
+            // Column4
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.panel4);
-            this.splitContainer1.Panel2MinSize = 60;
-            this.splitContainer1.Size = new System.Drawing.Size(1266, 497);
-            this.splitContainer1.SplitterDistance = 420;
-            this.splitContainer1.TabIndex = 0;
-            // 
-            // panel5
-            // 
-            this.panel5.Controls.Add(this.dataGridView1);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel5.Location = new System.Drawing.Point(0, 0);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1266, 389);
-            this.panel5.TabIndex = 3;
+            this.Column4.DataPropertyName = "FNumber";
+            this.Column4.HeaderText = "品号";
+            this.Column4.MinimumWidth = 6;
+            this.Column4.Name = "Column4";
+            this.Column4.ReadOnly = true;
+            this.Column4.Width = 125;
             // 
             // dataGridView1
             // 
@@ -363,14 +359,6 @@ namespace com.jiuhuan.plan.view
             this.Column11.ReadOnly = true;
             this.Column11.Width = 125;
             // 
-            // FRemainQty
-            // 
-            this.FRemainQty.DataPropertyName = "FRemainQty";
-            this.FRemainQty.HeaderText = "待加工数量";
-            this.FRemainQty.MinimumWidth = 6;
-            this.FRemainQty.Name = "FRemainQty";
-            this.FRemainQty.Width = 125;
-            // 
             // Column19
             // 
             this.Column19.DataPropertyName = "FTimeout";
@@ -399,33 +387,6 @@ namespace com.jiuhuan.plan.view
             this.Column20.Name = "Column20";
             this.Column20.ReadOnly = true;
             this.Column20.Width = 125;
-            // 
-            // Column4
-            // 
-            this.Column4.DataPropertyName = "FNumber";
-            this.Column4.HeaderText = "品号";
-            this.Column4.MinimumWidth = 6;
-            this.Column4.Name = "Column4";
-            this.Column4.ReadOnly = true;
-            this.Column4.Width = 125;
-            // 
-            // Column5
-            // 
-            this.Column5.DataPropertyName = "FName";
-            this.Column5.HeaderText = "品名";
-            this.Column5.MinimumWidth = 6;
-            this.Column5.Name = "Column5";
-            this.Column5.ReadOnly = true;
-            this.Column5.Width = 125;
-            // 
-            // Column6
-            // 
-            this.Column6.DataPropertyName = "FModel";
-            this.Column6.HeaderText = "规格";
-            this.Column6.MinimumWidth = 6;
-            this.Column6.Name = "Column6";
-            this.Column6.ReadOnly = true;
-            this.Column6.Width = 125;
             // 
             // Column7
             // 
@@ -463,6 +424,45 @@ namespace com.jiuhuan.plan.view
             this.Column9.ReadOnly = true;
             this.Column9.Width = 125;
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.splitContainer1);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 125);
+            this.panel2.Margin = new System.Windows.Forms.Padding(4);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1266, 497);
+            this.panel2.TabIndex = 5;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.panel5);
+            this.splitContainer1.Panel1.Controls.Add(this.panel3);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.panel4);
+            this.splitContainer1.Panel2MinSize = 60;
+            this.splitContainer1.Size = new System.Drawing.Size(1266, 497);
+            this.splitContainer1.SplitterDistance = 420;
+            this.splitContainer1.TabIndex = 0;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.dataGridView1);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(1266, 389);
+            this.panel5.TabIndex = 3;
+            // 
             // panel3
             // 
             this.panel3.Controls.Add(this.label6);
@@ -482,28 +482,28 @@ namespace com.jiuhuan.plan.view
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(349, 9);
+            this.label6.Location = new System.Drawing.Point(357, 9);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(52, 15);
-            this.label6.TabIndex = 14;
+            this.label6.TabIndex = 15;
             this.label6.Text = "总数：";
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(291, 5);
+            this.button8.Location = new System.Drawing.Point(295, 5);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(35, 23);
-            this.button8.TabIndex = 13;
+            this.button8.TabIndex = 6;
             this.button8.Text = ">|";
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(250, 5);
+            this.button7.Location = new System.Drawing.Point(254, 5);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(35, 23);
-            this.button7.TabIndex = 12;
+            this.button7.TabIndex = 5;
             this.button7.Text = ">";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
@@ -511,18 +511,19 @@ namespace com.jiuhuan.plan.view
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(204, 9);
+            this.label3.Location = new System.Drawing.Point(219, 9);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(23, 15);
-            this.label3.TabIndex = 11;
+            this.label3.TabIndex = 4;
             this.label3.Text = "/?";
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(152, 4);
+            this.textBox2.Enabled = false;
+            this.textBox2.Location = new System.Drawing.Point(167, 4);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(46, 25);
-            this.textBox2.TabIndex = 10;
+            this.textBox2.TabIndex = 3;
             this.textBox2.Text = "*";
             this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox2_KeyPress);
@@ -530,28 +531,28 @@ namespace com.jiuhuan.plan.view
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(94, 9);
+            this.label2.Location = new System.Drawing.Point(109, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(52, 15);
-            this.label2.TabIndex = 9;
+            this.label2.TabIndex = 2;
             this.label2.Text = "页码：";
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(53, 5);
+            this.button6.Location = new System.Drawing.Point(68, 5);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(35, 23);
-            this.button6.TabIndex = 8;
+            this.button6.TabIndex = 1;
             this.button6.Text = "<";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(12, 5);
+            this.button5.Location = new System.Drawing.Point(27, 5);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(35, 23);
-            this.button5.TabIndex = 7;
+            this.button5.TabIndex = 0;
             this.button5.Text = "|<";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
@@ -823,47 +824,131 @@ namespace com.jiuhuan.plan.view
             this.dataGridViewTextBoxColumn22.ReadOnly = true;
             this.dataGridViewTextBoxColumn22.Width = 125;
             // 
-            // panel1
+            // 打印ToolStripMenuItem
             // 
-            this.panel1.Controls.Add(this.button4);
-            this.panel1.Controls.Add(this.button3);
-            this.panel1.Controls.Add(this.button2);
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.toolStrip1);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.textBox1);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.dateTimePicker2);
-            this.panel1.Controls.Add(this.dateTimePicker1);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1266, 125);
-            this.panel1.TabIndex = 4;
+            this.打印ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.编辑打印模板ToolStripMenuItem,
+            this.打印ToolStripMenuItem1});
+            this.打印ToolStripMenuItem.Name = "打印ToolStripMenuItem";
+            this.打印ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
+            this.打印ToolStripMenuItem.Text = "打印";
             // 
-            // button4
+            // 编辑打印模板ToolStripMenuItem
             // 
-            this.button4.Location = new System.Drawing.Point(811, 42);
-            this.button4.Margin = new System.Windows.Forms.Padding(4);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(100, 64);
-            this.button4.TabIndex = 78;
-            this.button4.Text = "保 存";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.编辑打印模板ToolStripMenuItem.Name = "编辑打印模板ToolStripMenuItem";
+            this.编辑打印模板ToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
+            this.编辑打印模板ToolStripMenuItem.Text = "选择打印模板";
+            this.编辑打印模板ToolStripMenuItem.Click += new System.EventHandler(this.选择打印模板ToolStripMenuItem_Click);
             // 
-            // button3
+            // 打印ToolStripMenuItem1
             // 
-            this.button3.Location = new System.Drawing.Point(703, 42);
-            this.button3.Margin = new System.Windows.Forms.Padding(4);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(100, 64);
-            this.button3.TabIndex = 77;
-            this.button3.Text = "打 印";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.打印ToolStripMenuItem1.Name = "打印ToolStripMenuItem1";
+            this.打印ToolStripMenuItem1.Size = new System.Drawing.Size(182, 26);
+            this.打印ToolStripMenuItem1.Text = "打印";
+            this.打印ToolStripMenuItem1.Click += new System.EventHandler(this.打印ToolStripMenuItem1_Click);
+            // 
+            // toolStripDropDownButton4
+            // 
+            this.toolStripDropDownButton4.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.导出ToolStripMenuItem,
+            this.打印ToolStripMenuItem,
+            this.查询实体ToolStripMenuItem});
+            this.toolStripDropDownButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton4.Image")));
+            this.toolStripDropDownButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton4.Name = "toolStripDropDownButton4";
+            this.toolStripDropDownButton4.Size = new System.Drawing.Size(73, 24);
+            this.toolStripDropDownButton4.Text = "功能";
+            this.toolStripDropDownButton4.ToolTipText = "导出";
+            // 
+            // 导出ToolStripMenuItem
+            // 
+            this.导出ToolStripMenuItem.Name = "导出ToolStripMenuItem";
+            this.导出ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
+            this.导出ToolStripMenuItem.Text = "导出";
+            this.导出ToolStripMenuItem.Click += new System.EventHandler(this.导出ToolStripMenuItem_Click);
+            // 
+            // 查询实体ToolStripMenuItem
+            // 
+            this.查询实体ToolStripMenuItem.Name = "查询实体ToolStripMenuItem";
+            this.查询实体ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
+            this.查询实体ToolStripMenuItem.Text = "查询实体";
+            this.查询实体ToolStripMenuItem.Click += new System.EventHandler(this.查询实体ToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 27);
+            // 
+            // 导入ToolStripMenuItem
+            // 
+            this.导入ToolStripMenuItem.Name = "导入ToolStripMenuItem";
+            this.导入ToolStripMenuItem.Size = new System.Drawing.Size(122, 26);
+            this.导入ToolStripMenuItem.Text = "导入";
+            this.导入ToolStripMenuItem.Click += new System.EventHandler(this.导入ToolStripMenuItem_Click);
+            // 
+            // 加载ToolStripMenuItem
+            // 
+            this.加载ToolStripMenuItem.Name = "加载ToolStripMenuItem";
+            this.加载ToolStripMenuItem.Size = new System.Drawing.Size(122, 26);
+            this.加载ToolStripMenuItem.Text = "加载";
+            this.加载ToolStripMenuItem.Click += new System.EventHandler(this.加载ToolStripMenuItem_Click);
+            // 
+            // 新增ToolStripMenuItem
+            // 
+            this.新增ToolStripMenuItem.Name = "新增ToolStripMenuItem";
+            this.新增ToolStripMenuItem.Size = new System.Drawing.Size(122, 26);
+            this.新增ToolStripMenuItem.Text = "新增";
+            this.新增ToolStripMenuItem.Click += new System.EventHandler(this.新增ToolStripMenuItem_Click);
+            // 
+            // toolStripDropDownButton1
+            // 
+            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.新增ToolStripMenuItem,
+            this.加载ToolStripMenuItem,
+            this.导入ToolStripMenuItem});
+            this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
+            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(73, 24);
+            this.toolStripDropDownButton1.Text = "加载";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
+            // 
+            // toolStripDropDownButton2
+            // 
+            this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.查询ToolStripMenuItem,
+            this.恢复底稿ToolStripMenuItem,
+            this.分屏ToolStripMenuItem});
+            this.toolStripDropDownButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton2.Image")));
+            this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
+            this.toolStripDropDownButton2.Size = new System.Drawing.Size(73, 24);
+            this.toolStripDropDownButton2.Text = "查询";
+            // 
+            // 查询ToolStripMenuItem
+            // 
+            this.查询ToolStripMenuItem.Name = "查询ToolStripMenuItem";
+            this.查询ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
+            this.查询ToolStripMenuItem.Text = "查询";
+            this.查询ToolStripMenuItem.Click += new System.EventHandler(this.查询ToolStripMenuItem_Click);
+            // 
+            // 恢复底稿ToolStripMenuItem
+            // 
+            this.恢复底稿ToolStripMenuItem.Name = "恢复底稿ToolStripMenuItem";
+            this.恢复底稿ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
+            this.恢复底稿ToolStripMenuItem.Text = "恢复底稿";
+            this.恢复底稿ToolStripMenuItem.Click += new System.EventHandler(this.恢复底稿ToolStripMenuItem_Click);
+            // 
+            // 分屏ToolStripMenuItem
+            // 
+            this.分屏ToolStripMenuItem.Name = "分屏ToolStripMenuItem";
+            this.分屏ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
+            this.分屏ToolStripMenuItem.Text = "筛选过滤";
+            this.分屏ToolStripMenuItem.Click += new System.EventHandler(this.筛选过滤ToolStripMenuItem_Click);
             // 
             // button2
             // 
@@ -905,77 +990,6 @@ namespace com.jiuhuan.plan.view
             this.toolStrip1.TabIndex = 74;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripDropDownButton1
-            // 
-            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.新增ToolStripMenuItem,
-            this.加载ToolStripMenuItem,
-            this.导入ToolStripMenuItem});
-            this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
-            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(73, 24);
-            this.toolStripDropDownButton1.Text = "加载";
-            // 
-            // 新增ToolStripMenuItem
-            // 
-            this.新增ToolStripMenuItem.Name = "新增ToolStripMenuItem";
-            this.新增ToolStripMenuItem.Size = new System.Drawing.Size(122, 26);
-            this.新增ToolStripMenuItem.Text = "新增";
-            this.新增ToolStripMenuItem.Click += new System.EventHandler(this.新增ToolStripMenuItem_Click);
-            // 
-            // 加载ToolStripMenuItem
-            // 
-            this.加载ToolStripMenuItem.Name = "加载ToolStripMenuItem";
-            this.加载ToolStripMenuItem.Size = new System.Drawing.Size(122, 26);
-            this.加载ToolStripMenuItem.Text = "加载";
-            this.加载ToolStripMenuItem.Click += new System.EventHandler(this.加载ToolStripMenuItem_Click);
-            // 
-            // 导入ToolStripMenuItem
-            // 
-            this.导入ToolStripMenuItem.Name = "导入ToolStripMenuItem";
-            this.导入ToolStripMenuItem.Size = new System.Drawing.Size(122, 26);
-            this.导入ToolStripMenuItem.Text = "导入";
-            this.导入ToolStripMenuItem.Click += new System.EventHandler(this.导入ToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
-            // 
-            // toolStripDropDownButton2
-            // 
-            this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.查询ToolStripMenuItem,
-            this.恢复底稿ToolStripMenuItem,
-            this.分屏ToolStripMenuItem});
-            this.toolStripDropDownButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton2.Image")));
-            this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
-            this.toolStripDropDownButton2.Size = new System.Drawing.Size(73, 24);
-            this.toolStripDropDownButton2.Text = "查询";
-            // 
-            // 查询ToolStripMenuItem
-            // 
-            this.查询ToolStripMenuItem.Name = "查询ToolStripMenuItem";
-            this.查询ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
-            this.查询ToolStripMenuItem.Text = "查询";
-            this.查询ToolStripMenuItem.Click += new System.EventHandler(this.查询ToolStripMenuItem_Click);
-            // 
-            // 恢复底稿ToolStripMenuItem
-            // 
-            this.恢复底稿ToolStripMenuItem.Name = "恢复底稿ToolStripMenuItem";
-            this.恢复底稿ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
-            this.恢复底稿ToolStripMenuItem.Text = "恢复底稿";
-            this.恢复底稿ToolStripMenuItem.Click += new System.EventHandler(this.恢复底稿ToolStripMenuItem_Click);
-            // 
-            // 分屏ToolStripMenuItem
-            // 
-            this.分屏ToolStripMenuItem.Name = "分屏ToolStripMenuItem";
-            this.分屏ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
-            this.分屏ToolStripMenuItem.Text = "筛选过滤";
-            this.分屏ToolStripMenuItem.Click += new System.EventHandler(this.筛选过滤ToolStripMenuItem_Click);
-            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
@@ -996,78 +1010,23 @@ namespace com.jiuhuan.plan.view
             // 删除选中行ToolStripMenuItem
             // 
             this.删除选中行ToolStripMenuItem.Name = "删除选中行ToolStripMenuItem";
-            this.删除选中行ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.删除选中行ToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.删除选中行ToolStripMenuItem.Text = "删除选中行";
             this.删除选中行ToolStripMenuItem.Click += new System.EventHandler(this.删除选中行ToolStripMenuItem_Click);
             // 
             // 显示隐藏列ToolStripMenuItem
             // 
             this.显示隐藏列ToolStripMenuItem.Name = "显示隐藏列ToolStripMenuItem";
-            this.显示隐藏列ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.显示隐藏列ToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.显示隐藏列ToolStripMenuItem.Text = "配置列信息";
             this.显示隐藏列ToolStripMenuItem.Click += new System.EventHandler(this.配置列信息ToolStripMenuItem_Click);
             // 
             // 全选ToolStripMenuItem
             // 
             this.全选ToolStripMenuItem.Name = "全选ToolStripMenuItem";
-            this.全选ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.全选ToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.全选ToolStripMenuItem.Text = "全选";
             this.全选ToolStripMenuItem.Click += new System.EventHandler(this.全选ToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 27);
-            // 
-            // toolStripDropDownButton4
-            // 
-            this.toolStripDropDownButton4.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.导出ToolStripMenuItem,
-            this.打印ToolStripMenuItem,
-            this.查询实体ToolStripMenuItem});
-            this.toolStripDropDownButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton4.Image")));
-            this.toolStripDropDownButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButton4.Name = "toolStripDropDownButton4";
-            this.toolStripDropDownButton4.Size = new System.Drawing.Size(73, 24);
-            this.toolStripDropDownButton4.Text = "功能";
-            this.toolStripDropDownButton4.ToolTipText = "导出";
-            // 
-            // 导出ToolStripMenuItem
-            // 
-            this.导出ToolStripMenuItem.Name = "导出ToolStripMenuItem";
-            this.导出ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
-            this.导出ToolStripMenuItem.Text = "导出";
-            this.导出ToolStripMenuItem.Click += new System.EventHandler(this.导出ToolStripMenuItem_Click);
-            // 
-            // 打印ToolStripMenuItem
-            // 
-            this.打印ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.编辑打印模板ToolStripMenuItem,
-            this.打印ToolStripMenuItem1});
-            this.打印ToolStripMenuItem.Name = "打印ToolStripMenuItem";
-            this.打印ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
-            this.打印ToolStripMenuItem.Text = "打印";
-            // 
-            // 编辑打印模板ToolStripMenuItem
-            // 
-            this.编辑打印模板ToolStripMenuItem.Name = "编辑打印模板ToolStripMenuItem";
-            this.编辑打印模板ToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
-            this.编辑打印模板ToolStripMenuItem.Text = "选择打印模板";
-            this.编辑打印模板ToolStripMenuItem.Click += new System.EventHandler(this.选择打印模板ToolStripMenuItem_Click);
-            // 
-            // 打印ToolStripMenuItem1
-            // 
-            this.打印ToolStripMenuItem1.Name = "打印ToolStripMenuItem1";
-            this.打印ToolStripMenuItem1.Size = new System.Drawing.Size(182, 26);
-            this.打印ToolStripMenuItem1.Text = "打印";
-            this.打印ToolStripMenuItem1.Click += new System.EventHandler(this.打印ToolStripMenuItem1_Click);
-            // 
-            // 查询实体ToolStripMenuItem
-            // 
-            this.查询实体ToolStripMenuItem.Name = "查询实体ToolStripMenuItem";
-            this.查询实体ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
-            this.查询实体ToolStripMenuItem.Text = "查询实体";
-            this.查询实体ToolStripMenuItem.Click += new System.EventHandler(this.查询实体ToolStripMenuItem_Click);
             // 
             // toolStripDropDownButton5
             // 
@@ -1101,6 +1060,28 @@ namespace com.jiuhuan.plan.view
             this.初始化ToolStripMenuItem.Size = new System.Drawing.Size(137, 26);
             this.初始化ToolStripMenuItem.Text = "初始化";
             this.初始化ToolStripMenuItem.Click += new System.EventHandler(this.初始化ToolStripMenuItem_Click);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(811, 42);
+            this.button4.Margin = new System.Windows.Forms.Padding(4);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(100, 64);
+            this.button4.TabIndex = 78;
+            this.button4.Text = "保 存";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(703, 42);
+            this.button3.Margin = new System.Windows.Forms.Padding(4);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(100, 64);
+            this.button3.TabIndex = 77;
+            this.button3.Text = "打 印";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // label1
             // 
@@ -1147,6 +1128,26 @@ namespace com.jiuhuan.plan.view
             this.dateTimePicker1.TabIndex = 65;
             this.dateTimePicker1.Value = new System.DateTime(2025, 10, 28, 0, 0, 0, 0);
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.button4);
+            this.panel1.Controls.Add(this.button3);
+            this.panel1.Controls.Add(this.button2);
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.toolStrip1);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.textBox1);
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.dateTimePicker2);
+            this.panel1.Controls.Add(this.dateTimePicker1);
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1266, 125);
+            this.panel1.TabIndex = 4;
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -1156,31 +1157,31 @@ namespace com.jiuhuan.plan.view
             this.label4.TabIndex = 64;
             this.label4.Text = "时间：";
             // 
-            // ValveAutoProcessForm
+            // DatabaseForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1266, 622);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
-            this.Name = "ValveAutoProcessForm";
+            this.Name = "DatabaseForm";
             this.Text = "DatabaseForm";
             this.Load += new System.EventHandler(this.DatabaseForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1279,15 +1280,15 @@ namespace com.jiuhuan.plan.view
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolStripMenuItem 初始化ToolStripMenuItem;
-        private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label6;
     }
 }

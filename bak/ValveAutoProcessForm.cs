@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace com.jiuhuan.plan.view
 {
-    public partial class BomForm : GridViewForm<Bom>
+    public partial class ValveAutoProcessForm : GridViewForm<ValveAutoProcess>
     {
-        public BomForm()
+        public ValveAutoProcessForm()
         {
             InitializeComponent();
         }
@@ -22,8 +22,11 @@ namespace com.jiuhuan.plan.view
         {
             InitializeData();
 
-            dateTimePicker1.Value = DateTime.Now;
+            dateTimePicker1.Value = DateTime.Now.AddMonths(-12);
             dateTimePicker2.Value = DateTime.Now.AddMonths(1);
+
+            // 初始化分页显示
+            UpdatePageInfo();
         }
 
         protected override SplitContainer GetSplitContainer()
@@ -79,7 +82,7 @@ namespace com.jiuhuan.plan.view
 
         private void 新增ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CreateRecord<BomEditForm>();
+            CreateRecord<ValveAutoProcessEditForm>();
         }
 
         private void 加载ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -154,12 +157,12 @@ namespace com.jiuhuan.plan.view
 
         private void 初始化ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InitializeDatabase();
+            
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            CreateEditForm<BomEditForm>(sender, e);
+            CreateEditForm<ValveAutoProcessEditForm>(sender, e);
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)

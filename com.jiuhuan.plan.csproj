@@ -86,6 +86,37 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="attribute\ManyToManyAttribute.cs" />
+    <Compile Include="chenxian\view\BomEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\BomEditForm.designer.cs">
+      <DependentUpon>BomEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\DepartmentEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\DepartmentEditForm.designer.cs">
+      <DependentUpon>DepartmentEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\UserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\UserForm.designer.cs">
+      <DependentUpon>UserForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\ValveAutoProcessEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\ValveAutoProcessEditForm.designer.cs">
+      <DependentUpon>ValveAutoProcessEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\ValveAutoProcessForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\ValveAutoProcessForm.designer.cs">
+      <DependentUpon>ValveAutoProcessForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="view\BaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,11 +134,11 @@
     <Compile Include="attribute\CheckBoxAttribute.cs" />
     <Compile Include="attribute\ColumnAttribute.cs" />
     <Compile Include="attribute\ComboBoxAttribute.cs" />
-    <Compile Include="chenxian\view\BomEditForm.cs">
+    <Compile Include="chenxian\view\UserEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="chenxian\view\BomEditForm.designer.cs">
-      <DependentUpon>BomEditForm.cs</DependentUpon>
+    <Compile Include="chenxian\view\UserEditForm.designer.cs">
+      <DependentUpon>UserEditForm.cs</DependentUpon>
     </Compile>
     <Compile Include="chenxian\view\BomForm.cs">
       <SubType>Form</SubType>
@@ -125,9 +156,6 @@
     <Compile Include="view\GridViewForm3.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="view\GridViewForm4.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="view\GridViewForm5.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -142,17 +170,11 @@
       <DependentUpon>ReturnPopup.cs</DependentUpon>
     </Compile>
     <Compile Include="view\SqlParameterDialog.cs" />
-    <Compile Include="chenxian\view\ValveAutoProcessEditForm.cs">
+    <Compile Include="chenxian\view\DepartmentForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="chenxian\view\ValveAutoProcessEditForm.designer.cs">
-      <DependentUpon>ValveAutoProcessEditForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="chenxian\view\ValveAutoProcessForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="chenxian\view\ValveAutoProcessForm.designer.cs">
-      <DependentUpon>ValveAutoProcessForm.cs</DependentUpon>
+    <Compile Include="chenxian\view\DepartmentForm.designer.cs">
+      <DependentUpon>DepartmentForm.cs</DependentUpon>
     </Compile>
     <Compile Include="chenxian\view\ValveAccessoryScanRecordEditForm.cs">
       <SubType>Form</SubType>
@@ -175,12 +197,6 @@
       <DependentUpon>CustomizationSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="chenxian\domain\Department.cs" />
-    <Compile Include="chenxian\view\DepartmentForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="chenxian\view\DepartmentForm.Designer.cs">
-      <DependentUpon>DepartmentForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="tools\ExcelHelperEx.cs" />
     <Compile Include="view\FilterCondition.cs" />
     <Compile Include="framework\event\ClickMenuEvent.cs" />
@@ -349,7 +365,7 @@
     <Compile Include="chenxian\view\ToScheduleFinalRecordForm.Designer.cs">
       <DependentUpon>ToScheduleFinalRecordForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="domain\User.cs" />
+    <Compile Include="chenxian\domain\User.cs" />
     <Compile Include="tools\Utility.cs" />
     <Compile Include="framework\utility\LogUtility.cs" />
     <Compile Include="tools\Utils.cs" />
@@ -369,6 +385,21 @@
       <DependentUpon>WorkCalendarForm.cs</DependentUpon>
     </Compile>
     <Compile Include="chenxian\domain\Workday.cs" />
+    <EmbeddedResource Include="chenxian\view\BomEditForm.resx">
+      <DependentUpon>BomEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\DepartmentEditForm.resx">
+      <DependentUpon>DepartmentEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\UserForm.resx">
+      <DependentUpon>UserForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\ValveAutoProcessEditForm.resx">
+      <DependentUpon>ValveAutoProcessEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\ValveAutoProcessForm.resx">
+      <DependentUpon>ValveAutoProcessForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="view\BaseForm.resx">
       <DependentUpon>BaseForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -381,8 +412,8 @@
     <EmbeddedResource Include="view\CustomizationSettingsForm.resx">
       <DependentUpon>CustomizationSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="chenxian\view\BomEditForm.resx">
-      <DependentUpon>BomEditForm.cs</DependentUpon>
+    <EmbeddedResource Include="chenxian\view\UserEditForm.resx">
+      <DependentUpon>UserEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\BomForm.resx">
       <DependentUpon>BomForm.cs</DependentUpon>
@@ -393,26 +424,17 @@
     <EmbeddedResource Include="view\GridViewForm3.resx">
       <DependentUpon>GridViewForm3.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="view\GridViewForm4.resx">
-      <DependentUpon>GridViewForm4.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="view\ReturnPopup.resx">
       <DependentUpon>ReturnPopup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="chenxian\view\ValveAutoProcessEditForm.resx">
-      <DependentUpon>ValveAutoProcessEditForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="chenxian\view\ValveAutoProcessForm.resx">
-      <DependentUpon>ValveAutoProcessForm.cs</DependentUpon>
+    <EmbeddedResource Include="chenxian\view\DepartmentForm.resx">
+      <DependentUpon>DepartmentForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\ValveAccessoryScanRecordEditForm.resx">
       <DependentUpon>ValveAccessoryScanRecordEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\ValveAccessoryScanRecordForm.resx">
       <DependentUpon>ValveAccessoryScanRecordForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="chenxian\view\DepartmentForm.resx">
-      <DependentUpon>DepartmentForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\MoInventoryStatusDetailsDataGridViewForm.resx">
       <DependentUpon>MoInventoryStatusDetailsDataGridViewForm.cs</DependentUpon>

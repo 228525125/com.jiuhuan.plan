@@ -36,8 +36,11 @@ namespace com.jiuhuan.plan
             menuModel.AddEntity<ValveAccessoryScanRecord>();
             menuModel.AddEntity<ValveAutoProcess>();
             menuModel.AddEntity<Bom>();
+            menuModel.AddEntity<Department>();
+            menuModel.AddEntity<User>();
 
             menuModel.AddEntity("员工工时统计", "ReportForm");
+            menuModel.AddEntity("试压结果明细", "ReportForm");
             menuModel.AddEntity("合格证打印记录", "ReportForm");
             menuModel.AddEntity("查询-工单未编制刻印模板", "ReportForm");
             RegisterModel<IMenuModel>(menuModel);

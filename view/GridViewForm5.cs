@@ -53,13 +53,16 @@ namespace com.jiuhuan.plan.view
         {
             GetSplitContainer().Panel2Collapsed = true;
 
+            
+
             // 监听dataGridView2的单元格值变化事件
             GetDataGridView2().CellValueChanged += (sender, e) =>
             {
                 // 结束编辑模式，确保值被提交
                 GetDataGridView2().EndEdit();
-
                 filteredRecords1 = UV.ApplyFilter(GetDataGridView1(), GetDataGridView2(), selectedRecords);
+                string sqlFromFile = File.ReadAllText(GetSqlFilePath(), Encoding.Default);
+                CalculateSumFromSql(sqlFromFile);
                 UpdatePagination(filteredRecords1);
             };
 
@@ -70,6 +73,8 @@ namespace com.jiuhuan.plan.view
                 {
                     e.Handled = true;
                     filteredRecords1 = UV.ApplyFilter(GetDataGridView1(), GetDataGridView2(), selectedRecords);
+                    string sqlFromFile = File.ReadAllText(GetSqlFilePath(), Encoding.Default);
+                    CalculateSumFromSql(sqlFromFile);
                     UpdatePagination(filteredRecords1);
                 }
             };
@@ -102,8 +107,8 @@ namespace com.jiuhuan.plan.view
             };
 
             user = Framework.Interface.GetModel<ISessionModel>().GetUser();
-
-            _pageSize = 2000;
+            var num = user.GetSettings(User.FPageSize);
+            _pageSize = null != num ? int.Parse(num.ToString()) : 200;
 
             LoadData(() => {
 
@@ -188,6 +193,71 @@ namespace com.jiuhuan.plan.view
             this._title = title;
         }
 
+        private string GetSqlFilePath()
+        {
+            string sqlFileName = $"Report_{_title}.sql";
+
+            // 获取当前应用程序目录
+            string appDirectory = Utils.GetAppDirectory();
+
+            // 构建SQL文件的完整路径：当前目录/sql/文件名
+            string sqlFilePath = Path.Combine(appDirectory, "sql", sqlFileName);
+
+            return sqlFilePath;
+        }
+
+        /// <summary>
+        /// 从SQL内容中解析汇总字段并计算合计，显示到label7
+        /// 如果filteredRecords1不为空则合计filteredRecords1，否则合计selectedRecords
+        /// </summary>
+        /// <param name="sqlContent">包含sum标签定义的SQL内容</param>
+        private void CalculateSumFromSql(string sqlContent)
+        {
+            // 从 SQL 文件中解析 <sum> 标签，表示需要汇总显示的字段
+            var sum = Utility.ParseXmlTag(sqlContent, "sum");
+
+            if (string.IsNullOrEmpty(sum))
+                return;
+
+            // 确定合计的数据源：filteredRecords1不为空时使用filteredRecords1，否则使用selectedRecords
+            List<Dictionary<string, object>> sumSource = (filteredRecords1 != null && filteredRecords1.Count > 0)
+                ? filteredRecords1
+                : selectedRecords;
+
+            // 解析汇总字段名，多个字段用分号隔开
+            string[] sumFields = sum.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // 对每个汇总字段计算总和
+            List<string> sumResults = new List<string>();
+            foreach (string fieldName in sumFields)
+            {
+                string trimmedField = fieldName.Trim();
+                if (string.IsNullOrEmpty(trimmedField))
+                    continue;
+
+                decimal total = 0;
+                foreach (var record in sumSource)
+                {
+                    if (record.ContainsKey(trimmedField) && record[trimmedField] != null)
+                    {
+                        if (decimal.TryParse(record[trimmedField].ToString(), out decimal value))
+                        {
+                            total += value;
+                        }
+                    }
+                }
+
+                sumResults.Add($"{trimmedField}：{total}");
+            }
+
+            // 将汇总结果显示到 label7
+            Label sumLabel = this.Controls.Find("label7", true).FirstOrDefault() as Label;
+            if (sumLabel != null)
+            {
+                sumLabel.Text = "合计 =>   " + string.Join("  ", sumResults);
+            }
+        }
+
         /// <summary>
         /// 用于加载数据的SQL语句
         /// </summary>
@@ -214,7 +284,7 @@ namespace com.jiuhuan.plan.view
         /// <summary>
         /// 从数据库加载数据
         /// </summary>
-        public async void LoadData(System.Action action = null)
+        public async void LoadData(Action action = null)
         {
             // 显示进度窗口
             ProgressWindow progressWindow = new ProgressWindow();
@@ -225,13 +295,8 @@ namespace com.jiuhuan.plan.view
                 // 更新进度
                 progressWindow.UpdateProgress(10, "正在查找SQL文件...");
 
-                string sqlFileName = $"Report_{_title}.sql";
-
-                // 获取当前应用程序目录
-                string appDirectory = Utils.GetAppDirectory();
-
                 // 构建SQL文件的完整路径：当前目录/sql/文件名
-                string sqlFilePath = Path.Combine(appDirectory, "sql", sqlFileName);
+                string sqlFilePath = GetSqlFilePath();
 
                 // 检查文件是否存在
                 if (!File.Exists(sqlFilePath))
@@ -293,44 +358,8 @@ namespace com.jiuhuan.plan.view
                 // 更新进度
                 progressWindow.UpdateProgress(60, "正在汇总结果...");
 
-                // 从 SQL 文件中解析 <sum> 标签，表示需要汇总显示的字段
-                var sum = Utility.ParseXmlTag(sqlFromFile, "sum");
-
-                if (!string.IsNullOrEmpty(sum))
-                {
-                    // 解析汇总字段名，多个字段用分号隔开
-                    string[] sumFields = sum.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    // 对每个汇总字段计算总和
-                    List<string> sumResults = new List<string>();
-                    foreach (string fieldName in sumFields)
-                    {
-                        string trimmedField = fieldName.Trim();
-                        if (string.IsNullOrEmpty(trimmedField))
-                            continue;
-
-                        decimal total = 0;
-                        foreach (var record in queryResult)
-                        {
-                            if (record.ContainsKey(trimmedField) && record[trimmedField] != null)
-                            {
-                                if (decimal.TryParse(record[trimmedField].ToString(), out decimal value))
-                                {
-                                    total += value;
-                                }
-                            }
-                        }
-
-                        sumResults.Add($"{trimmedField}：{total}");
-                    }
-
-                    // 将汇总结果显示到 label7
-                    Label sumLabel = this.Controls.Find("label7", true).FirstOrDefault() as Label;
-                    if (sumLabel != null)
-                    {
-                        sumLabel.Text = "合计 =>   " + string.Join("  ", sumResults);
-                    }
-                }
+                // 从 SQL 文件中解析 <sum> 标签并计算汇总
+                CalculateSumFromSql(sqlFromFile);
 
                 // 更新进度
                 progressWindow.UpdateProgress(70, "数据准备完毕...");
@@ -339,15 +368,10 @@ namespace com.jiuhuan.plan.view
             // 更新进度
             progressWindow.UpdateProgress(80, "正在将数据导入表格...");
 
-            await Task.Run(() =>
-            {
-                action?.Invoke();
+            action?.Invoke();
 
-                // 更新进度
-                progressWindow.UpdateProgress(100, "完成显示！");
-
-                Thread.Sleep(1000);
-            });
+            // 更新进度
+            progressWindow.UpdateProgress(100, "完成显示！");
 
             // 关闭进度窗口
             progressWindow.Close();
@@ -359,7 +383,8 @@ namespace com.jiuhuan.plan.view
         protected void Query1()
         {
             FilterBills1();
-
+            string sqlFromFile = File.ReadAllText(GetSqlFilePath(), Encoding.Default);
+            CalculateSumFromSql(sqlFromFile);
             UpdatePagination(filteredRecords1);
         }
 
@@ -368,6 +393,9 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected void ReloadRecords()
         {
+            filteredRecords1 = new List<Dictionary<string, object>>();
+            string sqlFromFile = File.ReadAllText(GetSqlFilePath(), Encoding.Default);
+            CalculateSumFromSql(sqlFromFile);
             UpdatePagination(selectedRecords);
         }
 
