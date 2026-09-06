@@ -11,19 +11,22 @@ using System.Windows.Forms;
 
 namespace com.jiuhuan.plan.view
 {
-    public partial class StampRecordSilianDataForm : GridViewForm<StampRecordSilianData>
+    public partial class RoleForm : GridViewForm<Role>
     {
-        public StampRecordSilianDataForm()
+        public RoleForm()
         {
             InitializeComponent();
         }
 
-        private void StampRecordSilianDataForm_Load(object sender, EventArgs e)
+        private void DatabaseForm_Load(object sender, EventArgs e)
         {
             InitializeData();
 
-            dateTimePicker1.Value = DateTime.Now;
+            dateTimePicker1.Value = DateTime.Now.AddMonths(-12);
             dateTimePicker2.Value = DateTime.Now.AddMonths(1);
+
+            // 初始化分页显示
+            UpdatePageInfo();
         }
 
         protected override SplitContainer GetSplitContainer()
@@ -53,14 +56,34 @@ namespace com.jiuhuan.plan.view
                 bill.FDate >= startDate &&
                 bill.FDate <= endDate &&
                 (string.IsNullOrEmpty(queryText) ||
-                bill.FBillNo.Contains(queryText) ||
-                bill.FSilianSerialNumber.Contains(queryText))
+                bill.FNumber.Contains(queryText) ||
+                bill.FName.Contains(queryText))
             ).ToList();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Query1();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            DeleteSelectedRows();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            PrintSeletedTemplate();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Save();
         }
 
         private void 新增ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CreateRecord<StampRecordSilianDataEditForm>();
+            CreateRecord<RoleEditForm>();
         }
 
         private void 加载ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -83,14 +106,9 @@ namespace com.jiuhuan.plan.view
             ReloadRecords();
         }
 
-        private void 分屏ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 筛选过滤ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowExtraGridView();
-        }
-
-        private void 清空ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Clear1();
         }
 
         private void 删除选中行ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -98,52 +116,19 @@ namespace com.jiuhuan.plan.view
             DeleteSelectedRows();
         }
 
+        private void 配置列信息ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColumnSettings();
+        }
+
         private void 全选ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SelectAll();
         }
 
-        private void 显示隐藏列ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ColumnSettings();
-        }
-
         private void 导出ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Export();
-        }
-
-        private void 保存到数据库ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Save();
-        }
-
-        private void 重置ToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Reset();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Query1();
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            DeleteSelectedRows();
-        }
-
-        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            CreateEditForm<StampRecordSilianDataEditForm>(sender, e);
-        }
-
-        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter && this.textBox1.Text != "")
-            {
-                Query1();
-            }
         }
 
         private void 选择打印模板ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -156,19 +141,37 @@ namespace com.jiuhuan.plan.view
             PrintSeletedTemplate();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void 查询实体ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PrintSeletedTemplate();
+            ShowEntityInformation();
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void 保存到数据库ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Save();
         }
 
-        private void 查询实体ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 重置ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            ShowEntityInformation();
+            Reset();
+        }
+
+        private void 初始化ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InitializeDatabase();
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            CreateEditForm<RoleEditForm>(sender, e);
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter && this.textBox1.Text != "")
+            {
+                Query1();
+            }
         }
 
         private void button5_Click(object sender, EventArgs e)

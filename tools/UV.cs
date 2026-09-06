@@ -26,6 +26,7 @@ namespace com.jiuhuan.plan
 
     public class UV
     {
+
         public static void ColumnSettings(DataGridView dataGridView, List<Dictionary<string, object>> list, string title, User user, IWin32Window win)
         {
             // 创建列配置窗体
@@ -1421,11 +1422,20 @@ namespace com.jiuhuan.plan
         /// <summary>
         /// 根据ColumnAttribute属性的描述创建DataGridView中的列
         /// </summary>
-        /// <typeparam name="T">数据类型</typeparam>
+        /// <param name="entityType">实体类型</param>
         /// <param name="dataGridView">DataGridView控件</param>
         public static void InitializeColumnsWithAttributes<T>(DataGridView dataGridView) where T : new()
         {
-            Type entityType = typeof(T);
+            InitializeColumnsWithAttributes(typeof(T), dataGridView);
+        }
+
+        /// <summary>
+        /// 根据ColumnAttribute属性的描述创建DataGridView中的列
+        /// </summary>
+        /// <param name="entityType">实体类型</param>
+        /// <param name="dataGridView">DataGridView控件</param>
+        public static void InitializeColumnsWithAttributes(Type entityType, DataGridView dataGridView)
+        {
             var properties = entityType.GetProperties();
 
             // 清除现有的列（除了选择列和行号列）
@@ -1475,7 +1485,7 @@ namespace com.jiuhuan.plan
                 // 设置列属性
                 column.Name = property.Name;
                 column.DataPropertyName = property.Name;
-                column.HeaderText = string.IsNullOrEmpty(columnAttribute.Title) ? Utility.GetAttributeValueByField<T>("Field", "Name", property.Name) as string : columnAttribute.Title;
+                column.HeaderText = string.IsNullOrEmpty(columnAttribute.Title) ? Utility.GetAttributeValueByField(entityType, "Field", "Name", property.Name) as string : columnAttribute.Title;
                 column.Width = columnAttribute.Width;
                 column.ReadOnly = columnAttribute.ReadOnly;
                 column.Visible = columnAttribute.Visible;
@@ -1499,7 +1509,7 @@ namespace com.jiuhuan.plan
                 if (dgv == null || dgv.DataSource == null) return;
 
                 // 获取当前数据源
-                var dataSource = dgv.DataSource as List<T>;
+                var dataSource = dgv.DataSource as System.Collections.IList;
                 if (dataSource == null) return;
 
                 // 获取被点击的列
@@ -1507,7 +1517,7 @@ namespace com.jiuhuan.plan
                 if (clickedColumn == null) return;
 
                 // 获取要排序的属性
-                PropertyInfo sortProperty = typeof(T).GetProperty(clickedColumn.Name);
+                PropertyInfo sortProperty = entityType.GetProperty(clickedColumn.Name);
                 if (sortProperty == null) return;
 
                 // 检查当前排序状态，实现升序/降序切换
@@ -1526,12 +1536,12 @@ namespace com.jiuhuan.plan
                 // 执行排序
                 if (direction == ListSortDirection.Ascending)
                 {
-                    dataSource = dataSource.OrderBy(item => sortProperty.GetValue(item)).ToList();
+                    dataSource = dataSource.Cast<object>().OrderBy(item => sortProperty.GetValue(item)).ToList();
                     dgv.Tag = clickedColumn.Name + "_ASC";
                 }
                 else
                 {
-                    dataSource = dataSource.OrderByDescending(item => sortProperty.GetValue(item)).ToList();
+                    dataSource = dataSource.Cast<object>().OrderByDescending(item => sortProperty.GetValue(item)).ToList();
                     dgv.Tag = clickedColumn.Name + "_DESC";
                 }
 
@@ -1999,7 +2009,7 @@ namespace com.jiuhuan.plan
         {
             AddRowNumberColumn(dataGridView, form);
             EnableMultiSelectWithCheckbox(dataGridView);
-            InitializeColumnsWithAttributes<T>(dataGridView);
+            InitializeColumnsWithAttributes(typeof(T), dataGridView);
         }
 
         /// <summary>
@@ -2026,6 +2036,18 @@ namespace com.jiuhuan.plan
             AddRowNumberColumn(dataGridView);
             EnableMultiSelectWithCheckbox(dataGridView);
             InitializeColumnsWithAttributes<T>(dataGridView);
+        }
+
+        /// <summary>
+        /// 初始化DataGridView，不带分页
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="dataGridView">主表格</param>
+        public static void InitializationDataGridView(Type type, DataGridView dataGridView)
+        {
+            AddRowNumberColumn(dataGridView);
+            EnableMultiSelectWithCheckbox(dataGridView);
+            InitializeColumnsWithAttributes(type, dataGridView);
         }
 
         /// <summary>

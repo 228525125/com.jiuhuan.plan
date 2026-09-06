@@ -87,6 +87,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="attribute\ManyToManyAttribute.cs" />
+    <Compile Include="attribute\DataGridView_RowDoubleClickAttribute.cs" />
+    <Compile Include="chenxian\domain\Document.cs" />
+    <Compile Include="chenxian\domain\PressureTestResult.cs" />
+    <Compile Include="chenxian\domain\Role.cs" />
+    <Compile Include="chenxian\domain\WorkingHours.cs" />
     <Compile Include="chenxian\view\BomEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -98,6 +103,30 @@
     </Compile>
     <Compile Include="chenxian\view\DepartmentEditForm.designer.cs">
       <DependentUpon>DepartmentEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\DepartmentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\DepartmentForm.designer.cs">
+      <DependentUpon>DepartmentForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\DocumentEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\DocumentEditForm.designer.cs">
+      <DependentUpon>DocumentEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\RoleEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\RoleEditForm.designer.cs">
+      <DependentUpon>RoleEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\RoleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\RoleForm.designer.cs">
+      <DependentUpon>RoleForm.cs</DependentUpon>
     </Compile>
     <Compile Include="chenxian\view\UserForm.cs">
       <SubType>Form</SubType>
@@ -116,6 +145,18 @@
     </Compile>
     <Compile Include="chenxian\view\ValveAutoProcessForm.designer.cs">
       <DependentUpon>ValveAutoProcessForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\PressureTestResultReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\PressureTestResultReportForm.designer.cs">
+      <DependentUpon>PressureTestResultReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\WorkingHoursReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\WorkingHoursReportForm.designer.cs">
+      <DependentUpon>WorkingHoursReportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="view\BaseForm.cs">
       <SubType>Form</SubType>
@@ -146,6 +187,9 @@
     <Compile Include="chenxian\view\BomForm.designer.cs">
       <DependentUpon>BomForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="view\GridViewForm4.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="view\ReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,11 +214,11 @@
       <DependentUpon>ReturnPopup.cs</DependentUpon>
     </Compile>
     <Compile Include="view\SqlParameterDialog.cs" />
-    <Compile Include="chenxian\view\DepartmentForm.cs">
+    <Compile Include="chenxian\view\DocumentForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="chenxian\view\DepartmentForm.designer.cs">
-      <DependentUpon>DepartmentForm.cs</DependentUpon>
+    <Compile Include="chenxian\view\DocumentForm.designer.cs">
+      <DependentUpon>DocumentForm.cs</DependentUpon>
     </Compile>
     <Compile Include="chenxian\view\ValveAccessoryScanRecordEditForm.cs">
       <SubType>Form</SubType>
@@ -391,6 +435,18 @@
     <EmbeddedResource Include="chenxian\view\DepartmentEditForm.resx">
       <DependentUpon>DepartmentEditForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\DepartmentForm.resx">
+      <DependentUpon>DepartmentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\DocumentEditForm.resx">
+      <DependentUpon>DocumentEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\RoleEditForm.resx">
+      <DependentUpon>RoleEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\RoleForm.resx">
+      <DependentUpon>RoleForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\UserForm.resx">
       <DependentUpon>UserForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -399,6 +455,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\ValveAutoProcessForm.resx">
       <DependentUpon>ValveAutoProcessForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\PressureTestResultReportForm.resx">
+      <DependentUpon>PressureTestResultReportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\WorkingHoursReportForm.resx">
+      <DependentUpon>WorkingHoursReportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="view\BaseForm.resx">
       <DependentUpon>BaseForm.cs</DependentUpon>
@@ -427,8 +489,8 @@
     <EmbeddedResource Include="view\ReturnPopup.resx">
       <DependentUpon>ReturnPopup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="chenxian\view\DepartmentForm.resx">
-      <DependentUpon>DepartmentForm.cs</DependentUpon>
+    <EmbeddedResource Include="chenxian\view\DocumentForm.resx">
+      <DependentUpon>DocumentForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\ValveAccessoryScanRecordEditForm.resx">
       <DependentUpon>ValveAccessoryScanRecordEditForm.cs</DependentUpon>

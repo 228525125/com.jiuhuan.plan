@@ -227,15 +227,21 @@ namespace com.jiuhuan.plan.tools {
         /// <param name="propertyName">属性名</param>
         /// <param name="fieldName">属性字段名</param>
         /// <returns></returns>
-        public static object GetAttributeValueByField<T>(string attributeName, string propertyName, string memberName)
+        /// <summary>
+        /// 获取指定类型或其基类上，特性名为attributeName的成员的指定属性值
+        /// </summary>
+        /// <param name="type">要查询的类型</param>
+        /// <param name="attributeName">特性名</param>
+        /// <param name="propertyName">属性名</param>
+        /// <param name="memberName">成员名</param>
+        /// <returns></returns>
+        public static object GetAttributeValueByField(Type type, string attributeName, string propertyName, string memberName)
         {
             if (string.IsNullOrEmpty(attributeName) || string.IsNullOrEmpty(propertyName) || string.IsNullOrEmpty(memberName))
             {
                 return null;
             }
 
-            Type type = typeof(T);
-            
             // 规范化特性名称：如果用户传入"Entity"，需要匹配"EntityAttribute"
             string normalizedAttributeName = attributeName.EndsWith("Attribute", StringComparison.OrdinalIgnoreCase) 
                 ? attributeName 
@@ -319,6 +325,19 @@ namespace com.jiuhuan.plan.tools {
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 获取T或其基类被特性名为attributeName的成员的指定属性值
+        /// </summary>
+        /// <typeparam name="T">数据类型</typeparam>
+        /// <param name="attributeName">特性名</param>
+        /// <param name="propertyName">属性名</param>
+        /// <param name="memberName">成员名</param>
+        /// <returns></returns>
+        public static object GetAttributeValueByField<T>(string attributeName, string propertyName, string memberName)
+        {
+            return GetAttributeValueByField(typeof(T), attributeName, propertyName, memberName);
         }
 
         /// <summary>

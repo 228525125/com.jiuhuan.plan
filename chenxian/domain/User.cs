@@ -20,11 +20,10 @@ namespace com.jiuhuan.plan.domain
         [Field("帐号")]
         public string FName { get; set; }
 
-        [Ignore]
         [Column(width : 100)]
         [TextBox(width: 100, ui: true)]
         [Field("姓名")]
-        public string FDescription { get { return FNote; } }
+        public string FDescription { get; set; }
 
         public string FPassword { get; set; }
 
@@ -38,6 +37,11 @@ namespace com.jiuhuan.plan.domain
         [ManyToMany(typeof(Department), "Department_User", mappedBy: "FNumber", joinColumn: "FName", title: "部门列表")]
         [Popup("请选择部门", multipleRowSelection: true, isMultipleColumnReturn: true)]
         public List<Department> DepartmentList { get; set; } = new List<Department>();
+
+        [Ignore]
+        [ManyToMany(typeof(Role), "Role_User", mappedBy: "FNumber", joinColumn: "FName", title: "角色列表")]
+        [Popup("请选择角色", multipleRowSelection: true, isMultipleColumnReturn: true)]
+        public List<Role> RoleList { get; set; } = new List<Role>();
 
         public string FRole { get; set; }
 

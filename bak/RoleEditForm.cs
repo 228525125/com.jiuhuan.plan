@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace com.jiuhuan.plan.view
 {
-    public partial class DepartmentEditForm : EditPopup<Department>
+    public partial class RoleEditForm : EditPopup<Role>
     {
-        public DepartmentEditForm()
+        public RoleEditForm()
         {
             InitializeComponent();
         }
@@ -82,6 +82,23 @@ namespace com.jiuhuan.plan.view
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            DeleteSelectedRows();
+        }
+
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Import_OpenPopup();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"操作失败：{ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripButton6_Click(object sender, EventArgs e)
         {
             DeleteSelectedRows();
         }

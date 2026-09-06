@@ -1,7 +1,7 @@
 ﻿
 namespace com.jiuhuan.plan.view
 {
-    partial class UserEditForm
+    partial class RoleEditForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserEditForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RoleEditForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -98,7 +98,6 @@ namespace com.jiuhuan.plan.view
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1257, 431);
             this.tabControl1.TabIndex = 0;
-            //this.tabControl1.Selected += tabControl_Selected;
             // 
             // tabPage2
             // 
@@ -109,9 +108,8 @@ namespace com.jiuhuan.plan.view
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(1249, 402);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "部门列表";
+            this.tabPage2.Text = "员工列表";
             this.tabPage2.UseVisualStyleBackColor = true;
-            this.tabPage2.Layout += TabPage_Layout;
             // 
             // dataGridView1
             // 
@@ -177,9 +175,8 @@ namespace com.jiuhuan.plan.view
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(1249, 402);
             this.tabPage1.TabIndex = 2;
-            this.tabPage1.Text = "角色列表";
+            this.tabPage1.Text = "作业权限";
             this.tabPage1.UseVisualStyleBackColor = true;
-            this.tabPage1.Layout += TabPage_Layout;
             // 
             // dataGridView2
             // 
@@ -265,14 +262,14 @@ namespace com.jiuhuan.plan.view
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // UserEditForm
+            // RoleEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1257, 601);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.panel1);
-            this.Name = "UserEditForm";
+            this.Name = "RoleEditForm";
             this.Text = "DatabaseEditForm";
             this.Load += new System.EventHandler(this.DatabaseEditForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -309,10 +306,10 @@ namespace com.jiuhuan.plan.view
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripButton toolStripButton4;
         private System.Windows.Forms.ToolStripButton toolStripButton5;
         private System.Windows.Forms.ToolStripButton toolStripButton6;
-        private System.Windows.Forms.DataGridView dataGridView2;
     }
 }

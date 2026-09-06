@@ -38,11 +38,15 @@ namespace com.jiuhuan.plan
             menuModel.AddEntity<Bom>();
             menuModel.AddEntity<Department>();
             menuModel.AddEntity<User>();
+            menuModel.AddEntity<Role>();
+            menuModel.AddEntity<Document>();
 
-            menuModel.AddEntity("员工工时统计", "ReportForm");
-            menuModel.AddEntity("试压结果明细", "ReportForm");
             menuModel.AddEntity("合格证打印记录", "ReportForm");
             menuModel.AddEntity("查询-工单未编制刻印模板", "ReportForm");
+            menuModel.AddEntity("刻印记录", "ReportForm");
+            menuModel.AddEntity("员工工时统计", "WorkingHoursReportForm");
+            menuModel.AddEntity("试压结果明细", "PressureTestResultReportForm");
+
             RegisterModel<IMenuModel>(menuModel);
 
             // 注册Utility

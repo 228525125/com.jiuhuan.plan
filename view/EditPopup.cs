@@ -1032,6 +1032,8 @@ namespace com.jiuhuan.plan.view
                 if (dataGridView == null)
                     continue;
 
+                //UV.InitializationDataGridView(oneToManyAttr.ChildType, dataGridView);   //经测试不起作用
+
                 // 获取属性值作为数据源
                 var dataSource = property.GetValue(this.record);
                 if (dataSource != null)
@@ -1084,6 +1086,8 @@ namespace com.jiuhuan.plan.view
                 DataGridView dataGridView = UV.FindDataGridViewInTabPage(targetTabPage);
                 if (dataGridView == null)
                     continue;
+
+                //UV.InitializationDataGridView(manyToManyAttr.ChildType, dataGridView);  //经测试不起作用
 
                 // 获取属性值作为数据源
                 var dataSource = property.GetValue(this.record);

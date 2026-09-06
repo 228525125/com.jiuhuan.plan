@@ -92,7 +92,7 @@ namespace com.jiuhuan.plan.commands
                     return;
                 }
 
-                if ("ReportForm".Equals(_formName))
+                if (_formName.Contains("ReportForm"))
                 {
                     MethodInfo setTitle = formType.GetMethod("SetTitle");
                     if (setTitle != null)

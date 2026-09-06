@@ -35,56 +35,62 @@ namespace com.jiuhuan.plan.view
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("工厂日历");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("部门");
             System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("员工");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("基础信息", new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("角色");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("作业");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("基础信息", new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2,
-            treeNode3});
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("工单维护");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("工序维护");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("排产结果");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("排产结果明细");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("生产计划");
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("计划排产", new System.Windows.Forms.TreeNode[] {
-            treeNode5,
-            treeNode6,
+            treeNode3,
+            treeNode4,
+            treeNode5});
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("工单维护");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("工序维护");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("排产结果");
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("排产结果明细");
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("生产计划");
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("计划排产", new System.Windows.Forms.TreeNode[] {
             treeNode7,
             treeNode8,
-            treeNode9});
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("客户唯一码");
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("附件扫码记录");
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("自动化参数");
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("BOM");
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("合格证打印记录");
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("查询-工单未编制刻印模板");
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("四科", new System.Windows.Forms.TreeNode[] {
-            treeNode11,
-            treeNode12,
+            treeNode9,
+            treeNode10,
+            treeNode11});
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("客户产品码");
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("附件扫码记录");
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("自动化参数");
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("BOM");
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("合格证打印记录");
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("刻印记录");
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("查询-工单未编制刻印模板");
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("四科", new System.Windows.Forms.TreeNode[] {
             treeNode13,
             treeNode14,
             treeNode15,
-            treeNode16});
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("生产制造", new System.Windows.Forms.TreeNode[] {
-            treeNode17});
-            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("员工工时统计");
-            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("试压结果明细");
-            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("四科", new System.Windows.Forms.TreeNode[] {
-            treeNode19,
-            treeNode20});
-            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("制造", new System.Windows.Forms.TreeNode[] {
-            treeNode21});
-            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("报表", new System.Windows.Forms.TreeNode[] {
-            treeNode22});
-            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("日志");
-            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("个人偏好");
-            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("系统设置", new System.Windows.Forms.TreeNode[] {
-            treeNode24,
-            treeNode25});
-            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("全部功能", new System.Windows.Forms.TreeNode[] {
-            treeNode4,
-            treeNode10,
+            treeNode16,
+            treeNode17,
             treeNode18,
-            treeNode23,
-            treeNode26});
+            treeNode19});
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("生产制造", new System.Windows.Forms.TreeNode[] {
+            treeNode20});
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("员工工时统计");
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("试压结果明细");
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("四科", new System.Windows.Forms.TreeNode[] {
+            treeNode22,
+            treeNode23});
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("制造", new System.Windows.Forms.TreeNode[] {
+            treeNode24});
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("报表", new System.Windows.Forms.TreeNode[] {
+            treeNode25});
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("日志");
+            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("个人偏好");
+            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("系统设置", new System.Windows.Forms.TreeNode[] {
+            treeNode27,
+            treeNode28});
+            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("全部功能", new System.Windows.Forms.TreeNode[] {
+            treeNode6,
+            treeNode12,
+            treeNode21,
+            treeNode26,
+            treeNode29});
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panel1 = new System.Windows.Forms.Panel();
             this.treeView1 = new System.Windows.Forms.TreeView();
@@ -130,56 +136,62 @@ namespace com.jiuhuan.plan.view
             treeNode2.Text = "部门";
             treeNode3.Name = "Node13";
             treeNode3.Text = "员工";
-            treeNode4.Name = "Node1";
-            treeNode4.Text = "基础信息";
-            treeNode5.Name = "Node21";
-            treeNode5.Text = "工单维护";
-            treeNode6.Name = "Node23";
-            treeNode6.Text = "工序维护";
-            treeNode7.Name = "Node22";
-            treeNode7.Text = "排产结果";
-            treeNode8.Name = "Node24";
-            treeNode8.Text = "排产结果明细";
-            treeNode9.Name = "Node25";
-            treeNode9.Text = "生产计划";
-            treeNode10.Name = "Node2";
-            treeNode10.Text = "计划排产";
-            treeNode11.Name = "Node341";
-            treeNode11.Text = "客户唯一码";
-            treeNode12.Name = "Node342";
-            treeNode12.Text = "附件扫码记录";
-            treeNode13.Name = "Node343";
-            treeNode13.Text = "自动化参数";
-            treeNode14.Name = "344";
-            treeNode14.Text = "BOM";
-            treeNode15.Name = "Node345";
-            treeNode15.Text = "合格证打印记录";
-            treeNode16.Name = "Node346";
-            treeNode16.Text = "查询-工单未编制刻印模板";
-            treeNode17.Name = "Node34";
-            treeNode17.Text = "四科";
-            treeNode18.Name = "Node3";
-            treeNode18.Text = "生产制造";
-            treeNode19.Name = "Node4141";
-            treeNode19.Text = "员工工时统计";
-            treeNode20.Name = "Node4142";
-            treeNode20.Text = "试压结果明细";
-            treeNode21.Name = "Node414";
-            treeNode21.Text = "四科";
-            treeNode22.Name = "Node41";
-            treeNode22.Text = "制造";
-            treeNode23.Name = "Node4";
-            treeNode23.Text = "报表";
-            treeNode24.Name = "Node91";
-            treeNode24.Text = "日志";
-            treeNode25.Name = "Node92";
-            treeNode25.Text = "个人偏好";
-            treeNode26.Name = "Node9";
-            treeNode26.Text = "系统设置";
-            treeNode27.Name = "RootNode";
-            treeNode27.Text = "全部功能";
+            treeNode4.Name = "Node14";
+            treeNode4.Text = "角色";
+            treeNode5.Name = "Node15";
+            treeNode5.Text = "作业";
+            treeNode6.Name = "Node1";
+            treeNode6.Text = "基础信息";
+            treeNode7.Name = "Node21";
+            treeNode7.Text = "工单维护";
+            treeNode8.Name = "Node23";
+            treeNode8.Text = "工序维护";
+            treeNode9.Name = "Node22";
+            treeNode9.Text = "排产结果";
+            treeNode10.Name = "Node24";
+            treeNode10.Text = "排产结果明细";
+            treeNode11.Name = "Node25";
+            treeNode11.Text = "生产计划";
+            treeNode12.Name = "Node2";
+            treeNode12.Text = "计划排产";
+            treeNode13.Name = "Node341";
+            treeNode13.Text = "客户产品码";
+            treeNode14.Name = "Node342";
+            treeNode14.Text = "附件扫码记录";
+            treeNode15.Name = "Node343";
+            treeNode15.Text = "自动化参数";
+            treeNode16.Name = "344";
+            treeNode16.Text = "BOM";
+            treeNode17.Name = "Node345";
+            treeNode17.Text = "合格证打印记录";
+            treeNode18.Name = "Node347";
+            treeNode18.Text = "刻印记录";
+            treeNode19.Name = "Node346";
+            treeNode19.Text = "查询-工单未编制刻印模板";
+            treeNode20.Name = "Node34";
+            treeNode20.Text = "四科";
+            treeNode21.Name = "Node3";
+            treeNode21.Text = "生产制造";
+            treeNode22.Name = "Node4141";
+            treeNode22.Text = "员工工时统计";
+            treeNode23.Name = "Node4142";
+            treeNode23.Text = "试压结果明细";
+            treeNode24.Name = "Node414";
+            treeNode24.Text = "四科";
+            treeNode25.Name = "Node41";
+            treeNode25.Text = "制造";
+            treeNode26.Name = "Node4";
+            treeNode26.Text = "报表";
+            treeNode27.Name = "Node91";
+            treeNode27.Text = "日志";
+            treeNode28.Name = "Node92";
+            treeNode28.Text = "个人偏好";
+            treeNode29.Name = "Node9";
+            treeNode29.Text = "系统设置";
+            treeNode30.Name = "RootNode";
+            treeNode30.Text = "全部功能";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode27});
+            treeNode30});
             this.treeView1.Size = new System.Drawing.Size(220, 398);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);

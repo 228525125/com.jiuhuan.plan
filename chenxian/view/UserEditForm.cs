@@ -5,8 +5,10 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 
 namespace com.jiuhuan.plan.view
@@ -20,8 +22,6 @@ namespace com.jiuhuan.plan.view
 
         private void DatabaseEditForm_Load(object sender, EventArgs e)
         {
-            UV.InitializationDataGridView<Department>(this.dataGridView1);
-
             var numberControl = FindControlByName<TextBox>(flowLayoutPanel1, "FName");
             numberControl.TextChanged += (s, args) =>
             {
@@ -33,6 +33,44 @@ namespace com.jiuhuan.plan.view
         protected override FlowLayoutPanel GetFlowLayoutPanel()
         {
             return this.flowLayoutPanel1;
+        }
+
+        /// <summary>
+        /// 刷新DataGridView数据
+        /// </summary>
+        private void TabPage_Layout(object sender, EventArgs e)
+        {
+            // 获取当前选中的 TabPage
+            TabPage targetTabPage = (TabPage)sender;
+
+            var manyToManyProperties = typeof(User).GetProperties()
+                .Where(p => Attribute.IsDefined(p, typeof(ManyToManyAttribute)))
+                .ToList();
+
+            foreach (var property in manyToManyProperties)
+            {
+                var manyToManyAttr = property.GetCustomAttribute<ManyToManyAttribute>();
+                if (manyToManyAttr == null || string.IsNullOrEmpty(manyToManyAttr.Title))
+                    continue;
+
+                if (string.Equals(targetTabPage.Text, manyToManyAttr.Title, StringComparison.OrdinalIgnoreCase))
+                {
+                    // 从 TabPage 中查找 DataGridView 控件
+                    DataGridView dataGridView = UV.FindDataGridViewInTabPage(targetTabPage);
+                    if (dataGridView == null)
+                        continue;
+
+                    UV.InitializationDataGridView(manyToManyAttr.ChildType, dataGridView);   
+                }
+            }
+        }
+
+        /// <summary>
+        /// TabControl选项卡切换后触发，用于在切换到对应TabPage时动态加载关联数据
+        /// </summary>
+        private void tabControl_Selected(object sender, TabControlEventArgs e)
+        {
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -82,6 +120,23 @@ namespace com.jiuhuan.plan.view
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            DeleteSelectedRows();
+        }
+
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Import_OpenPopup();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"操作失败：{ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripButton6_Click(object sender, EventArgs e)
         {
             DeleteSelectedRows();
         }
