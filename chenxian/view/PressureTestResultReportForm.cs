@@ -50,6 +50,8 @@ namespace com.jiuhuan.plan.view
             return textBox1; ;
         }
 
+
+
         private void button1_Click(object sender, EventArgs e)
         {
             Query1();
@@ -57,26 +59,7 @@ namespace com.jiuhuan.plan.view
 
         private void 加载ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LoadData(() => {
-
-                UV.InitializationDataGridView<PressureTestResult>(GetDataGridView1(), this);
-                UV.InitializationDataGridView<PressureTestResult>(GetDataGridView2());
-                // 设置筛选DataGridView
-                UV.SetupFilterDataGridView<PressureTestResult>(GetDataGridView2());
-
-                // 从User.FBuffer获取配置并应用到DataGridView           
-                string configKey = _title;
-                var valueConfig = user.GetSettings(configKey);
-                if (valueConfig != null)
-                {
-                    Dictionary<string, object> savedConfig = null;
-                    if (valueConfig is Dictionary<string, object> vc)
-                        savedConfig = vc;
-                    else
-                        savedConfig = JsonHelper.toObject<Dictionary<string, object>>(valueConfig.ToString());
-                    UV.ApplyColumnConfiguration(GetDataGridView1(), savedConfig);
-                }
-            });
+            LoadData();
         }
 
         private void 查询ToolStripMenuItem_Click(object sender, EventArgs e)

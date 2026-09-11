@@ -60,7 +60,7 @@ namespace com.jiuhuan.plan.commands
             try
             {
                 // 获取当前程序集
-                var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                var assembly = Assembly.GetExecutingAssembly();
                 
                 // 构建完整的类型名称，假设窗体类在 com.jiuhuan.plan.view 命名空间下
                 // 注意：请根据实际项目中窗体所在的命名空间调整下面的命名空间字符串
@@ -100,6 +100,12 @@ namespace com.jiuhuan.plan.commands
                         // 调用SetTitle方法设置数据
                         setTitle.Invoke(_form, new object[] { _tabPageText });
                     }
+                }
+
+                var user = this.GetModel<ISessionModel>().GetUser();
+                if (!Utils.HasPermission("浏览", formType, user))
+                {
+                    return;
                 }
             }
             catch (Exception ex)

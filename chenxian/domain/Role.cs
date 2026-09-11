@@ -10,6 +10,7 @@ namespace com.jiuhuan.plan.domain
     [Entity(entirety: true, title: "角色")]
     public class Role : Entity
     {
+        [Keyword]
         [Column(width: 100)]
         [TextBox(width: 100, readOnly: false)]
         [Field("角色编号")]
@@ -46,8 +47,8 @@ namespace com.jiuhuan.plan.domain
         public List<User> UserList { get; set; } = new List<User>();
 
         [Ignore]
-        [ManyToMany(typeof(Document), "Document_Role", mappedBy: "FNumber", joinColumn: "FNumber", "作业权限")]
+        [OneToMany(typeof(Permission), mappedBy: "FRoleNumber", joinColumn: "FNumber", title: "权限列表")]
         [Popup("请选择单据", multipleRowSelection: true, isMultipleColumnReturn: true)]
-        public List<Document> DocumentList { get; set; } = new List<Document>();
+        public List<Permission> PermissionList { get; set; } = new List<Permission>();
     }
 }

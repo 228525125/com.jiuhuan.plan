@@ -545,6 +545,43 @@ namespace com.jiuhuan.plan.tools {
             // 开始构建SQL - 移除所有GO命令，因为ExecuteNonQuery不支持
             StringBuilder sql = new StringBuilder();
             sql.AppendLine($"USE [{databaseName}]");
+
+            // 检查type是否包含OneToMany特性，如果有则先删除关联表
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var property in properties)
+            {
+                // 获取属性上的OneToMany特性
+                var oneToManyAttr = property.GetCustomAttribute<OneToManyAttribute>(true);
+                if (oneToManyAttr != null)
+                {
+                    // 获取OneToMany特性中指定的子实体类型
+                    Type childEntityType = oneToManyAttr.ChildType;
+                    if (childEntityType != null)
+                    {
+                        string childTableName = childEntityType.Name;
+                        sql.AppendLine($"IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[{childTableName}]') AND type in (N'U'))");
+                        sql.AppendLine($"DROP TABLE [{childTableName}]");
+                    }
+                }
+            }
+
+            // 检查type是否包含ManyToMany特性，如果有则先删除中间表
+            foreach (var property in properties)
+            {
+                // 获取属性上的ManyToMany特性
+                var manyToManyAttr = property.GetCustomAttribute<ManyToManyAttribute>(true);
+                if (manyToManyAttr != null)
+                {
+                    // 获取中间表名称
+                    string mappingTable = manyToManyAttr.MappingTable;
+                    if (!string.IsNullOrEmpty(mappingTable))
+                    {
+                        sql.AppendLine($"IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[{mappingTable}]') AND type in (N'U'))");
+                        sql.AppendLine($"DROP TABLE [{mappingTable}]");
+                    }
+                }
+            }
+
             sql.AppendLine($"IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[{tableName}]') AND type in (N'U'))");
             sql.AppendLine($"DROP TABLE [{tableName}]");
             sql.AppendLine();
@@ -561,7 +598,7 @@ namespace com.jiuhuan.plan.tools {
             string primaryKeyColumn = "FID"; // 默认主键
 
             // 获取所有属性（包括基类的属性）
-            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+            properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
             foreach (var property in properties)
             {

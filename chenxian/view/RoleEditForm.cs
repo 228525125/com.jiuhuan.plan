@@ -29,33 +29,6 @@ namespace com.jiuhuan.plan.view
             };
         }
 
-        private void TabPage_Layout(object sender, EventArgs e)
-        {
-            // 获取当前选中的 TabPage
-            TabPage targetTabPage = (TabPage)sender;
-
-            var manyToManyProperties = typeof(Role).GetProperties()
-                .Where(p => Attribute.IsDefined(p, typeof(ManyToManyAttribute)))
-                .ToList();
-
-            foreach (var property in manyToManyProperties)
-            {
-                var manyToManyAttr = property.GetCustomAttribute<ManyToManyAttribute>();
-                if (manyToManyAttr == null || string.IsNullOrEmpty(manyToManyAttr.Title))
-                    continue;
-
-                if (string.Equals(targetTabPage.Text, manyToManyAttr.Title, StringComparison.OrdinalIgnoreCase))
-                {
-                    // 从 TabPage 中查找 DataGridView 控件
-                    DataGridView dataGridView = UV.FindDataGridViewInTabPage(targetTabPage);
-                    if (dataGridView == null)
-                        continue;
-
-                    UV.InitializationDataGridView(manyToManyAttr.ChildType, dataGridView);
-                }
-            }
-        }
-
         protected override FlowLayoutPanel GetFlowLayoutPanel()
         {
             return this.flowLayoutPanel1;

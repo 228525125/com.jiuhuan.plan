@@ -38,7 +38,7 @@ namespace com.jiuhuan.plan.domain
 
         [Column(width: 100, readOnly: false)]
         [TextBox(width: 100, readOnly: false)]
-        [Field("套数")]
+        [Field("包装量")]
         public int FPackageQty { get; set; }
 
         [Column(width: 100)]

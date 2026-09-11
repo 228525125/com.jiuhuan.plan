@@ -176,7 +176,7 @@ namespace com.jiuhuan.plan.view
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(1249, 402);
             this.tabPage1.TabIndex = 2;
-            this.tabPage1.Text = "作业权限";
+            this.tabPage1.Text = "权限列表";
             this.tabPage1.UseVisualStyleBackColor = true;
             this.tabPage1.Layout += TabPage_Layout;
             // 

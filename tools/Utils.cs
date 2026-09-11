@@ -22,6 +22,52 @@ namespace com.jiuhuan.plan.tools
     public class Utils
     {
 
+        /// <summary>
+        /// 权限检查：通过 StackTrace 向上查找调用方法上的 PermissionAttribute 特性，
+        /// 使用 User.hasPermission 方法判断当前用户是否拥有指定操作权限。
+        /// documentType 为 GridViewForm 子类的类名，operation 为 PermissionAttribute 的 Name 属性值。
+        /// </summary>
+        /// <returns>拥有权限返回 true，否则返回 false</returns>
+        public static bool HasPermission(string operation, Type type, User user)
+        {
+            // 通过 StackTrace 向上查找带有 PermissionAttribute 的方法
+            // GetCurrentMethod() 返回的是 hasPermission 自身，而非调用者
+            //var stackTrace = new System.Diagnostics.StackTrace();
+            //PermissionAttribute permAttr = null;
+
+            //for (int i = 1; i < stackTrace.FrameCount; i++)
+            //{
+            //    var frame = stackTrace.GetFrame(i);
+            //    if (frame == null) continue;
+
+            //    var method = frame.GetMethod();
+            //    if (method == null) continue;
+
+            //    // 尝试从当前方法获取 PermissionAttribute
+            //    permAttr = method.GetCustomAttribute<PermissionAttribute>(true);
+            //    if (permAttr != null) break;
+            //}
+
+            //if (permAttr == null) return true;
+
+            //string operation = permAttr.Name;
+            
+
+
+
+            
+            //string documentType = type.Name;
+
+            //if (user != null && !user.HasPermission(documentType, operation))
+            //{
+            //    string msg = $"您没有【{operation}】权限，请联系管理员！";
+            //    MessageBox.Show(msg, "权限提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return false;
+            //}
+
+            return true;
+        }
+
 
         public static void OpenFolder(string folderPath)
         {

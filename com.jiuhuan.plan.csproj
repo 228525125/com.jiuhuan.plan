@@ -88,7 +88,9 @@
   <ItemGroup>
     <Compile Include="attribute\ManyToManyAttribute.cs" />
     <Compile Include="attribute\DataGridView_RowDoubleClickAttribute.cs" />
+    <Compile Include="attribute\PermissionAttribute.cs" />
     <Compile Include="chenxian\domain\Document.cs" />
+    <Compile Include="chenxian\domain\Permission.cs" />
     <Compile Include="chenxian\domain\PressureTestResult.cs" />
     <Compile Include="chenxian\domain\Role.cs" />
     <Compile Include="chenxian\domain\WorkingHours.cs" />
@@ -110,12 +112,6 @@
     <Compile Include="chenxian\view\DepartmentForm.designer.cs">
       <DependentUpon>DepartmentForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="chenxian\view\DocumentEditForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="chenxian\view\DocumentEditForm.designer.cs">
-      <DependentUpon>DocumentEditForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="chenxian\view\RoleEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,6 +129,12 @@
     </Compile>
     <Compile Include="chenxian\view\UserForm.designer.cs">
       <DependentUpon>UserForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\DocumentEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\DocumentEditForm.designer.cs">
+      <DependentUpon>DocumentEditForm.cs</DependentUpon>
     </Compile>
     <Compile Include="chenxian\view\ValveAutoProcessEditForm.cs">
       <SubType>Form</SubType>
@@ -190,6 +192,7 @@
     <Compile Include="view\GridViewForm4.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="view\IPermission.cs" />
     <Compile Include="view\ReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -438,9 +441,6 @@
     <EmbeddedResource Include="chenxian\view\DepartmentForm.resx">
       <DependentUpon>DepartmentForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="chenxian\view\DocumentEditForm.resx">
-      <DependentUpon>DocumentEditForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\RoleEditForm.resx">
       <DependentUpon>RoleEditForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -449,6 +449,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\UserForm.resx">
       <DependentUpon>UserForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\DocumentEditForm.resx">
+      <DependentUpon>DocumentEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\ValveAutoProcessEditForm.resx">
       <DependentUpon>ValveAutoProcessEditForm.cs</DependentUpon>

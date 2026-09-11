@@ -36,36 +36,6 @@ namespace com.jiuhuan.plan.view
         }
 
         /// <summary>
-        /// 刷新DataGridView数据
-        /// </summary>
-        private void TabPage_Layout(object sender, EventArgs e)
-        {
-            // 获取当前选中的 TabPage
-            TabPage targetTabPage = (TabPage)sender;
-
-            var manyToManyProperties = typeof(User).GetProperties()
-                .Where(p => Attribute.IsDefined(p, typeof(ManyToManyAttribute)))
-                .ToList();
-
-            foreach (var property in manyToManyProperties)
-            {
-                var manyToManyAttr = property.GetCustomAttribute<ManyToManyAttribute>();
-                if (manyToManyAttr == null || string.IsNullOrEmpty(manyToManyAttr.Title))
-                    continue;
-
-                if (string.Equals(targetTabPage.Text, manyToManyAttr.Title, StringComparison.OrdinalIgnoreCase))
-                {
-                    // 从 TabPage 中查找 DataGridView 控件
-                    DataGridView dataGridView = UV.FindDataGridViewInTabPage(targetTabPage);
-                    if (dataGridView == null)
-                        continue;
-
-                    UV.InitializationDataGridView(manyToManyAttr.ChildType, dataGridView);   
-                }
-            }
-        }
-
-        /// <summary>
         /// TabControl选项卡切换后触发，用于在切换到对应TabPage时动态加载关联数据
         /// </summary>
         private void tabControl_Selected(object sender, TabControlEventArgs e)

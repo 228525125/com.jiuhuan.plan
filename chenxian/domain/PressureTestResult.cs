@@ -26,6 +26,8 @@ namespace com.jiuhuan.plan.domain
         [Column("规格")]
         public string FModel { get; set; }
 
+        public string SSN { get; set; }
+
         [Column("阀组编号")]
         public string FValveFullSerialNumber { get; set; }
 

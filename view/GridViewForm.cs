@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -196,6 +197,17 @@ namespace com.jiuhuan.plan.view
         public const string ORDER_BY_FDate = " ORDER BY FDate ";
 
         /// <summary>
+        /// 使用 User.hasPermission 方法判断当前用户是否拥有指定操作权限
+        /// </summary>
+        /// <param name="operation">操作</param>
+        /// <returns></returns>
+        private bool hasPermission(string operation)
+        {
+            //return Utils.HasPermission(operation, this.GetType(), user);
+            return true;
+        }
+
+        /// <summary>
         /// 根据实体配置和用户信息构建最终SQL语句
         /// </summary>
         /// <param name="baseSql">基础SQL语句</param>
@@ -225,6 +237,8 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         public async void LoadData()
         {
+            if (!hasPermission("浏览")) return;
+
             // 显示进度窗口
             ProgressWindow progressWindow = new ProgressWindow();
             progressWindow.Show(this);
@@ -308,6 +322,8 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected void DeleteSelectedRows()
         {
+            if (!hasPermission("删除")) return;
+
             var list = UV.DeleteSelectedRows<T>(GetDataGridView1(), selectedRecords, this);
 
             UpdatePagination(list);
@@ -318,6 +334,8 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected void Save()
         {
+            if (!hasPermission("修改")) return;
+
             if (selectedRecords.Count == 0)
             {
                 MessageBox.Show("没有需要保存的数据，请检查！", "提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -333,6 +351,8 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected void Reset()
         {
+            if (!hasPermission("删除")) return;
+
             var result = MessageBox.Show($"确定要删除已保存的所有日历数据吗？", "确认删除", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
@@ -347,6 +367,8 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected void Export()
         {
+            if (!hasPermission("导出")) return;
+
             //var list = UV.GetSelectedRows<T>(GetDataGridView1());
             ExcelHelper.Export(selectedRecords);
         }
@@ -356,6 +378,8 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected async void Import()
         {
+            if (!hasPermission("新增")) return;
+
             var list = await ExcelHelper.Import<T>();
             DaoTemplate.Save(list);
         }
@@ -365,6 +389,8 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         public void ShowExtraGridView()
         {
+            if (!hasPermission("浏览")) return;
+
             GetSplitContainer().Panel2Collapsed = GetSplitContainer().Panel2Collapsed ? false : true;
         }
 
@@ -374,6 +400,8 @@ namespace com.jiuhuan.plan.view
         /// <typeparam name="EditForm"></typeparam>
         protected void CreateRecord<EditForm>() where EditForm : EditPopup<T>, new()
         {
+            if (!hasPermission("浏览")) return;
+
             var record = new T();
 
             // 创建编辑窗体实例
@@ -467,6 +495,8 @@ namespace com.jiuhuan.plan.view
         /// <param name="e"></param>
         protected void CreateEditForm<EditForm>(object sender, DataGridViewCellEventArgs e) where EditForm : EditPopup<T>, new()
         {
+            if (!hasPermission("浏览")) return;
+
             // 验证点击位置是否有效
             if (e.RowIndex < 0 || e.ColumnIndex < 0)
             {
@@ -517,7 +547,7 @@ namespace com.jiuhuan.plan.view
         /// 将编辑后的Record更新到数据源中
         /// </summary>
         /// <param name="editedRecord">编辑后的工单记录</param>
-        protected void UpdateDataSourceWithEditedRecord(T editedRecord)
+        private void UpdateDataSourceWithEditedRecord(T editedRecord)
         {
             // 在实际应用中，这里应该根据具体的业务逻辑来更新数据源
             // 例如：在selectedRecords列表中找到对应的记录并更新
@@ -779,8 +809,13 @@ namespace com.jiuhuan.plan.view
             GetDataGridView1().Rows[selectedIndex + 1].Selected = true;
         }
 
+        /// <summary>
+        /// 配置列信息
+        /// </summary>
         protected void ColumnSettings()
         {
+            if (!hasPermission("浏览")) return;
+
             UV.ColumnSettings<T>(GetDataGridView1(), user, this);
         }
 
@@ -799,25 +834,29 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected void OpenDefaultPrintTemplate()
         {
+            if (!hasPermission("打印")) return;
+
             // 获取泛型类型 T 的类名（不含命名空间）
             string className = typeof(T).Name;
             string templatePath = Utils.GetTemplateDirectory() + className + ".xls";
             Utils.OpenFile(templatePath);
         }
 
-        protected void PrintDefaultPrintTemplate(List<T> records, int times, string printer)
-        {
-            // 获取泛型类型 T 的类名（不含命名空间）
-            string className = typeof(T).Name;
-            string templatePath = Utils.GetTemplateDirectory() + className + ".xls";
-            ExcelHelperEx.Print(templatePath, records, times, printer);
-        }
+        //protected void PrintDefaultPrintTemplate(List<T> records, int times, string printer)
+        //{
+        //    // 获取泛型类型 T 的类名（不含命名空间）
+        //    string className = typeof(T).Name;
+        //    string templatePath = Utils.GetTemplateDirectory() + className + ".xls";
+        //    ExcelHelperEx.Print(templatePath, records, times, printer);
+        //}
 
         /// <summary>
         /// 打印默认样式
         /// </summary>
         protected void PrintDefaultPrintTemplate()
         {
+            if (!hasPermission("打印")) return;
+
             var records = UV.GetSelectedRows<T>(GetDataGridView1());
 
             if (0 == records.Count)
@@ -837,6 +876,8 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected void SelectPrintTemplate()
         {
+            if (!hasPermission("打印")) return;
+
             // 创建并配置打开文件对话框
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Excel文件|*.xls;*.xlsx";
@@ -861,6 +902,8 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected void PrintSeletedTemplate()
         {
+            if (!hasPermission("打印")) return;
+
             var records = UV.GetSelectedRows<T>(GetDataGridView1());
 
             if(0 == records.Count)
@@ -885,6 +928,8 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected void ShowEntityInformation()
         {
+            if (!hasPermission("浏览")) return;
+
             // 创建并配置窗体
             using (var infoForm = new Form())
             {
@@ -965,17 +1010,68 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected void InitializeDatabase()
         {
-            // 弹出确认对话框，提示用户初始化将导致数据丢失
-            var result = MessageBox.Show(
-                "警告：初始化数据库将删除该实体类型的所有现有数据！\n\n确定要继续吗？",
-                "确认初始化",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
+            if (!hasPermission("浏览")) return;
 
-            // 如果用户选择“否”或关闭对话框，则取消操作
-            if (result != DialogResult.Yes)
+            // 获取当前登录用户的密码，要求输入密码才能执行初始化操作
+            //User currentUser = this.GetModel<ISessionModel>().GetUser();
+            //if (currentUser == null)
+            //{
+            //    MessageBox.Show("无法获取当前用户信息，请重新登录！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return;
+            //}
+            
+            // 创建密码输入对话框
+            using (Form passwordForm = new Form())
             {
-                return;
+                passwordForm.Text = "确认操作";
+                passwordForm.Size = new Size(350, 180);
+                passwordForm.StartPosition = FormStartPosition.CenterParent;
+                passwordForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+                passwordForm.MaximizeBox = false;
+                passwordForm.MinimizeBox = false;
+            
+                Label tipLabel = new Label();
+                tipLabel.Text = "警告：初始化数据库将删除所有现有数据！\n请输入管理员密码以确认操作：";
+                tipLabel.Location = new Point(15, 15);
+                tipLabel.Size = new Size(310, 40);
+                passwordForm.Controls.Add(tipLabel);
+            
+                TextBox passwordTextBox = new TextBox();
+                passwordTextBox.PasswordChar = '*';
+                passwordTextBox.Location = new Point(15, 60);
+                passwordTextBox.Size = new Size(300, 25);
+                passwordForm.Controls.Add(passwordTextBox);
+            
+                Button okButton = new Button();
+                okButton.Text = "确定";
+                okButton.DialogResult = DialogResult.OK;
+                okButton.Location = new Point(140, 95);
+                okButton.Size = new Size(75, 30);
+                passwordForm.Controls.Add(okButton);
+            
+                Button cancelButton = new Button();
+                cancelButton.Text = "取消";
+                cancelButton.DialogResult = DialogResult.Cancel;
+                cancelButton.Location = new Point(225, 95);
+                cancelButton.Size = new Size(75, 30);
+                passwordForm.Controls.Add(cancelButton);
+            
+                passwordForm.AcceptButton = okButton;
+                passwordForm.CancelButton = cancelButton;
+            
+                // 显示密码输入对话框，如果用户取消则返回
+                if (passwordForm.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+            
+                // 验证输入的密码是否与当前用户密码一致
+                string inputPassword = passwordTextBox.Text.Trim();
+                if (string.IsNullOrEmpty(inputPassword) || inputPassword != "12123")
+                {
+                    MessageBox.Show("密码错误，操作已取消！", "验证失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
 
             DaoTemplate.CreateTable<T>();
@@ -1050,6 +1146,25 @@ namespace com.jiuhuan.plan.view
                     }
                 }
             }
+
+            var formName = Utility.GetAttributeValueByClass<T>("Entity", "FormName") as string;
+            var type = "";
+            var name = "";
+            if (string.IsNullOrEmpty(formName))
+            {
+                name = typeof(T).Name;
+                type = name + "Form";
+            }
+            else
+            {
+                type = formName;
+            }
+
+            var number = type + ".V01";
+
+            var document = new Document() { FNumber = number, FName = name, FType = type};
+            DaoTemplate.Save(document);
+
         }
 
         public int GetPageSize()

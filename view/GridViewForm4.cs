@@ -109,7 +109,7 @@ namespace com.jiuhuan.plan.view
             var num = user.GetSettings(User.FPageSize);
             _pageSize = null != num ? int.Parse(num.ToString()) : 200;
 
-            LoadData(() => {
+            LoadData2(() => {
 
                 UV.InitializationDataGridView<T>(GetDataGridView1(), this);
                 UV.InitializationDataGridView<T>(GetDataGridView2());
@@ -150,9 +150,37 @@ namespace com.jiuhuan.plan.view
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 根据T类型的所有字符串属性进行模糊查询过滤
+        /// 遍历T类型的所有公共实例属性，对字符串类型的属性值进行Contains匹配
+        /// 查询文本从GetTextBox1()获取，过滤结果保存到filteredRecords1中
+        /// </summary>
         protected virtual void FilterBills1()
         {
-            throw new NotImplementedException();
+            string queryText = GetTextBox1().Text.Trim();
+
+            // 获取T类型的所有字符串类型属性
+            var stringProperties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.PropertyType == typeof(string))
+                .ToArray();
+
+            // 过滤条件
+            filteredRecords1 = selectedRecords.Where(bill =>
+            {
+                // 如果没有查询文本，则返回所有记录
+                if (string.IsNullOrEmpty(queryText))
+                    return true;
+
+                // 遍历所有字符串属性，只要任意一个属性值包含查询文本即匹配
+                foreach (var prop in stringProperties)
+                {
+                    string value = prop.GetValue(bill) as string;
+                    if (!string.IsNullOrEmpty(value) && value.Contains(queryText))
+                        return true;
+                }
+
+                return false;
+            }).ToList();
         }
 
         public void SetDataSource(List<T> list)
@@ -262,7 +290,7 @@ namespace com.jiuhuan.plan.view
         /// <summary>
         /// 从数据库加载数据
         /// </summary>
-        public async void LoadData(Action action = null)
+        private async void LoadData2(Action action = null)
         {
             // 显示进度窗口
             ProgressWindow progressWindow = new ProgressWindow();
@@ -353,6 +381,33 @@ namespace com.jiuhuan.plan.view
 
             // 关闭进度窗口
             progressWindow.Close();
+        }
+
+        /// <summary>
+        /// 报表重新加载数据后，需要重新初始化表格列
+        /// </summary>
+        protected void LoadData()
+        {
+            LoadData2(() => {
+
+                UV.InitializationDataGridView<T>(GetDataGridView1(), this);
+                UV.InitializationDataGridView<T>(GetDataGridView2());
+                // 设置筛选DataGridView
+                UV.SetupFilterDataGridView<T>(GetDataGridView2());
+
+                // 从User.FBuffer获取配置并应用到DataGridView           
+                string configKey = _title;
+                var valueConfig = user.GetSettings(configKey);
+                if (valueConfig != null)
+                {
+                    Dictionary<string, object> savedConfig = null;
+                    if (valueConfig is Dictionary<string, object> vc)
+                        savedConfig = vc;
+                    else
+                        savedConfig = JsonHelper.toObject<Dictionary<string, object>>(valueConfig.ToString());
+                    UV.ApplyColumnConfiguration(GetDataGridView1(), savedConfig);
+                }
+            });
         }
 
         /// <summary>

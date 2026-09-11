@@ -10,6 +10,7 @@ namespace com.jiuhuan.plan.domain
     [Entity(entirety: true, title: "部门")]
     public class Department : Entity
     {
+        [Keyword]
         [Column(width: 100)]
         [TextBox(width: 100, ui: true)]
         [Field("部门编号")]

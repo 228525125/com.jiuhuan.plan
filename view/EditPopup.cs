@@ -67,6 +67,59 @@ namespace com.jiuhuan.plan.view
         }
 
         /// <summary>
+        /// 初始化表格列
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void TabPage_Layout(object sender, EventArgs e)
+        {
+            // 获取当前选中的 TabPage
+            TabPage targetTabPage = (TabPage)sender;
+
+            var manyToManyProperties = typeof(T).GetProperties()
+                .Where(p => Attribute.IsDefined(p, typeof(ManyToManyAttribute)))
+                .ToList();
+
+            foreach (var property in manyToManyProperties)
+            {
+                var manyToManyAttr = property.GetCustomAttribute<ManyToManyAttribute>();
+                if (manyToManyAttr == null || string.IsNullOrEmpty(manyToManyAttr.Title))
+                    continue;
+
+                if (string.Equals(targetTabPage.Text, manyToManyAttr.Title, StringComparison.OrdinalIgnoreCase))
+                {
+                    // 从 TabPage 中查找 DataGridView 控件
+                    DataGridView dataGridView = UV.FindDataGridViewInTabPage(targetTabPage);
+                    if (dataGridView == null)
+                        continue;
+
+                    UV.InitializationDataGridView(manyToManyAttr.ChildType, dataGridView);
+                }
+            }
+
+            var oneToManyProperties = typeof(T).GetProperties()
+                .Where(p => Attribute.IsDefined(p, typeof(OneToManyAttribute)))
+                .ToList();
+
+            foreach (var property in oneToManyProperties)
+            {
+                var oneToManyAttr = property.GetCustomAttribute<OneToManyAttribute>();
+                if (oneToManyAttr == null || string.IsNullOrEmpty(oneToManyAttr.Title))
+                    continue;
+
+                if (string.Equals(targetTabPage.Text, oneToManyAttr.Title, StringComparison.OrdinalIgnoreCase))
+                {
+                    // 从 TabPage 中查找 DataGridView 控件
+                    DataGridView dataGridView = UV.FindDataGridViewInTabPage(targetTabPage);
+                    if (dataGridView == null)
+                        continue;
+
+                    UV.InitializationDataGridView(oneToManyAttr.ChildType, dataGridView);
+                }
+            }
+        }
+
+        /// <summary>
         /// 删除选中行，包括底稿和数据库
         /// </summary>
         protected void DeleteSelectedRows()

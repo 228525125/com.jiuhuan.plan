@@ -36,7 +36,7 @@ namespace com.jiuhuan.plan.view
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("部门");
             System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("员工");
             System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("角色");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("作业");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("表单");
             System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("基础信息", new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2,
@@ -139,7 +139,7 @@ namespace com.jiuhuan.plan.view
             treeNode4.Name = "Node14";
             treeNode4.Text = "角色";
             treeNode5.Name = "Node15";
-            treeNode5.Text = "作业";
+            treeNode5.Text = "表单";
             treeNode6.Name = "Node1";
             treeNode6.Text = "基础信息";
             treeNode7.Name = "Node21";
