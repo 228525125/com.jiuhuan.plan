@@ -103,7 +103,7 @@ namespace com.jiuhuan.plan.commands
                 }
 
                 var user = this.GetModel<ISessionModel>().GetUser();
-                if (!Utils.HasPermission("浏览", formType, user))
+                if (!Utils.HasPermission("浏览", _tabPageText, formType, user))
                 {
                     return;
                 }

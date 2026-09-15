@@ -88,17 +88,30 @@
   <ItemGroup>
     <Compile Include="attribute\ManyToManyAttribute.cs" />
     <Compile Include="attribute\DataGridView_RowDoubleClickAttribute.cs" />
-    <Compile Include="attribute\PermissionAttribute.cs" />
     <Compile Include="chenxian\domain\Document.cs" />
     <Compile Include="chenxian\domain\Permission.cs" />
     <Compile Include="chenxian\domain\PressureTestResult.cs" />
     <Compile Include="chenxian\domain\Role.cs" />
+    <Compile Include="chenxian\domain\Technology.cs" />
+    <Compile Include="chenxian\domain\TechnologyD.cs" />
     <Compile Include="chenxian\domain\WorkingHours.cs" />
     <Compile Include="chenxian\view\BomEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="chenxian\view\BomEditForm.designer.cs">
       <DependentUpon>BomEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\BomForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\BomForm.designer.cs">
+      <DependentUpon>BomForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\TechnologyEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\TechnologyEditForm.designer.cs">
+      <DependentUpon>TechnologyEditForm.cs</DependentUpon>
     </Compile>
     <Compile Include="chenxian\view\DepartmentEditForm.cs">
       <SubType>Form</SubType>
@@ -183,16 +196,15 @@
     <Compile Include="chenxian\view\UserEditForm.designer.cs">
       <DependentUpon>UserEditForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="chenxian\view\BomForm.cs">
+    <Compile Include="chenxian\view\TechnologyForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="chenxian\view\BomForm.designer.cs">
-      <DependentUpon>BomForm.cs</DependentUpon>
+    <Compile Include="chenxian\view\TechnologyForm.designer.cs">
+      <DependentUpon>TechnologyForm.cs</DependentUpon>
     </Compile>
     <Compile Include="view\GridViewForm4.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="view\IPermission.cs" />
     <Compile Include="view\ReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -435,6 +447,12 @@
     <EmbeddedResource Include="chenxian\view\BomEditForm.resx">
       <DependentUpon>BomEditForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\BomForm.resx">
+      <DependentUpon>BomForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\TechnologyEditForm.resx">
+      <DependentUpon>TechnologyEditForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\DepartmentEditForm.resx">
       <DependentUpon>DepartmentEditForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -480,8 +498,8 @@
     <EmbeddedResource Include="chenxian\view\UserEditForm.resx">
       <DependentUpon>UserEditForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="chenxian\view\BomForm.resx">
-      <DependentUpon>BomForm.cs</DependentUpon>
+    <EmbeddedResource Include="chenxian\view\TechnologyForm.resx">
+      <DependentUpon>TechnologyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="view\ReportForm.resx">
       <DependentUpon>ReportForm.cs</DependentUpon>

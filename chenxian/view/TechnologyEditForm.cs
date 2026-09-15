@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace com.jiuhuan.plan.view
 {
-    public partial class BomEditForm : EditPopup<Bom>
+    public partial class TechnologyEditForm : EditPopup<Technology>
     {
-        public BomEditForm()
+        public TechnologyEditForm()
         {
             InitializeComponent();
         }

@@ -203,7 +203,8 @@ namespace com.jiuhuan.plan.view
         /// <returns></returns>
         private bool hasPermission(string operation)
         {
-            //return Utils.HasPermission(operation, this.GetType(), user);
+            //var title = Utility.GetAttributeValueByClass<T>("Entity", "Title") as string;
+            //return Utils.HasPermission(operation, title, this.GetType(), user);
             return true;
         }
 
@@ -1148,6 +1149,7 @@ namespace com.jiuhuan.plan.view
             }
 
             var formName = Utility.GetAttributeValueByClass<T>("Entity", "FormName") as string;
+            var title = Utility.GetAttributeValueByClass<T>("Entity", "Title") as string;
             var type = "";
             var name = "";
             if (string.IsNullOrEmpty(formName))
@@ -1160,11 +1162,10 @@ namespace com.jiuhuan.plan.view
                 type = formName;
             }
 
-            var number = type + ".V01";
+            var number = name + ".V01";
 
-            var document = new Document() { FNumber = number, FName = name, FType = type};
+            var document = new Document() { FNumber = number, FName = title, FType = type, FIsCreate = true, FIsDelete = true, FIsExport = true, FIsModify = true, FIsPrint = true, FIsQuery = true};
             DaoTemplate.Save(document);
-
         }
 
         public int GetPageSize()

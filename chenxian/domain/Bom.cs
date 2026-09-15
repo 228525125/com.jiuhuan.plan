@@ -23,7 +23,7 @@ namespace com.jiuhuan.plan.domain
 
         [Column(width: 100)]
         [TextBox(width: 100, ui: true)]
-        [Field("主件品名")]
+        [Field("主件规格")]
         public string FModel { get; set; }
 
         [Column(width: 100)]

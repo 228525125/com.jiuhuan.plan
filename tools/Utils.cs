@@ -28,7 +28,7 @@ namespace com.jiuhuan.plan.tools
         /// documentType 为 GridViewForm 子类的类名，operation 为 PermissionAttribute 的 Name 属性值。
         /// </summary>
         /// <returns>拥有权限返回 true，否则返回 false</returns>
-        public static bool HasPermission(string operation, Type type, User user)
+        public static bool HasPermission(string operation, string documentName, Type type, User user)
         {
             // 通过 StackTrace 向上查找带有 PermissionAttribute 的方法
             // GetCurrentMethod() 返回的是 hasPermission 自身，而非调用者
@@ -51,14 +51,14 @@ namespace com.jiuhuan.plan.tools
             //if (permAttr == null) return true;
 
             //string operation = permAttr.Name;
-            
 
 
 
-            
+
+
             //string documentType = type.Name;
 
-            //if (user != null && !user.HasPermission(documentType, operation))
+            //if (user != null && !user.HasPermission(documentName, documentType, operation))
             //{
             //    string msg = $"您没有【{operation}】权限，请联系管理员！";
             //    MessageBox.Show(msg, "权限提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);

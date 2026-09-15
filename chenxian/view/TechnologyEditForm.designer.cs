@@ -1,7 +1,7 @@
 ﻿
 namespace com.jiuhuan.plan.view
 {
-    partial class BomEditForm
+    partial class TechnologyEditForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BomEditForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TechnologyEditForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -98,7 +98,7 @@ namespace com.jiuhuan.plan.view
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(1249, 402);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "元件清单";
+            this.tabPage2.Text = "工序列表";
             this.tabPage2.UseVisualStyleBackColor = true;
             this.tabPage2.Layout += TabPage_Layout;
             // 

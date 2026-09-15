@@ -60,7 +60,7 @@ namespace com.jiuhuan.plan.domain
         /// <param name="documentType">单据类型</param>
         /// <param name="operation">操作名称，例如：新建、删除、修改、浏览等</param>
         /// <returns>拥有权限返回 true，否则返回 false</returns>
-        public bool HasPermission(string documentType, string operation)
+        public bool HasPermission(string documentName, string documentType, string operation)
         {
             // 如果用户没有分配任何角色，则无权限
             if (RoleList == null || !RoleList.Any())
@@ -113,7 +113,7 @@ namespace com.jiuhuan.plan.domain
             }
 
             // 在最终权限集合中，检查是否存在匹配指定单据编号和操作的权限
-            return permissions.Any(p => _matchesDocument(p, documentType) && _matchesOperation(p, operation));
+            return permissions.Any(p => _matchesDocument(p, documentName, documentType) && _matchesOperation(p, operation));
         }
 
         /// <summary>
@@ -159,9 +159,9 @@ namespace com.jiuhuan.plan.domain
         /// <param name="permission">权限记录</param>
         /// <param name="documentType">目标单据类型</param>
         /// <returns>匹配返回 true，否则返回 false</returns>
-        private bool _matchesDocument(Permission permission, string documentType)
+        private bool _matchesDocument(Permission permission, string documentName, string documentType)
         {
-            return permission.FDocumentType == documentType;
+            return permission.FDocumentType == documentType && permission.FDocumentName == documentName;
         }
 
         /// <summary>

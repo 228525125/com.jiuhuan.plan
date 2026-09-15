@@ -40,6 +40,7 @@ namespace com.jiuhuan.plan
             menuModel.AddEntity<User>();
             menuModel.AddEntity<Role>();
             menuModel.AddEntity<Document>();
+            menuModel.AddEntity<Technology>();
 
             menuModel.AddEntity("合格证打印记录", "ReportForm");
             menuModel.AddEntity("查询-工单未编制刻印模板", "ReportForm");

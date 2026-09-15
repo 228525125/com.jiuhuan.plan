@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace com.jiuhuan.plan.view
 {
-    public partial class BomForm : GridViewForm<Bom>
+    public partial class TechnologyForm : GridViewForm<Technology>
     {
-        public BomForm()
+        public TechnologyForm()
         {
             InitializeComponent();
         }
@@ -79,7 +79,7 @@ namespace com.jiuhuan.plan.view
 
         private void 新增ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CreateRecord<BomEditForm>();
+            CreateRecord<TechnologyEditForm>();
         }
 
         private void 加载ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -159,7 +159,7 @@ namespace com.jiuhuan.plan.view
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            CreateEditForm<BomEditForm>(sender, e);
+            CreateEditForm<TechnologyEditForm>(sender, e);
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
