@@ -76,44 +76,6 @@ namespace com.jiuhuan.plan.view
             ).OrderBy(item => item.FStatus).ToList();
         }
 
-        private void UpdateTotalRow()
-        {
-            // 计算filteredRecords1中FNeedWorkHours的总和并显示在label11上
-            var records = (List<ScheduleFinalRecord>)this.dataGridView1.DataSource;
-            int totalWorkHours = records.Sum(record => record.FNeedWorkHours);
-            label11.Text = $"{totalWorkHours}";
-
-            int capacity = GetCapacitySumByWorkdayAndShift();
-            label12.Text = $"{capacity}";
-        }
-
-        /// <summary>
-        /// 根据工作日期和班次查询workdays中对应日期的产能合计
-        /// </summary>
-        /// <returns>产能合计</returns>
-        private int GetCapacitySumByWorkdayAndShift()
-        {
-            // 获取工作日期和班次
-            DateTime workDate = dateTimePicker1.Value.Date;
-            string shift = comboBox1.SelectedItem?.ToString() ?? "";
-
-            // 过滤符合条件的记录
-            var filteredWorkdays = workdays.Where(w =>
-                w.FWorkDate.Date == workDate.Date &&
-                (string.IsNullOrEmpty(shift) || "全部".Equals(shift) || w.FClasses.Equals(shift))
-            ).ToList();
-
-            // 计算产能合计
-            // 产能 = 时长(秒) * 系数 * 人数 / 3600 (转换为小时)
-            int capacitySum = 0;
-            foreach (var workday in filteredWorkdays)
-            {
-                capacitySum += workday.FDuration;
-            }
-
-            return capacitySum;
-        }
-
         protected override bool ValidateRecord()
         {
             return true;
@@ -376,6 +338,53 @@ namespace com.jiuhuan.plan.view
                     GoToPage(pageNumber);
                 }
             }
+        }
+
+        private void UpdateTotalRow()
+        {
+            // 计算filteredRecords1中FNeedWorkHours的总和并显示在label11上
+            var records = (List<ScheduleFinalRecord>)this.dataGridView1.DataSource;
+            if (null != records)
+            {
+                int totalWorkHours = records.Sum(record => record.FNeedWorkHours);
+                label11.Text = $"{totalWorkHours}";
+
+                int capacity = GetCapacitySumByWorkdayAndShift();
+                label12.Text = $"{capacity}";
+            }
+            else
+            {
+                label11.Text = "";
+                label12.Text = "";
+            }
+
+        }
+
+        /// <summary>
+        /// 根据工作日期和班次查询workdays中对应日期的产能合计
+        /// </summary>
+        /// <returns>产能合计</returns>
+        private int GetCapacitySumByWorkdayAndShift()
+        {
+            // 获取工作日期和班次
+            DateTime workDate = dateTimePicker1.Value.Date;
+            string shift = comboBox1.SelectedItem?.ToString() ?? "";
+
+            // 过滤符合条件的记录
+            var filteredWorkdays = workdays.Where(w =>
+                w.FWorkDate.Date == workDate.Date &&
+                (string.IsNullOrEmpty(shift) || "全部".Equals(shift) || w.FClasses.Equals(shift))
+            ).ToList();
+
+            // 计算产能合计
+            // 产能 = 时长(秒) * 系数 * 人数 / 3600 (转换为小时)
+            int capacitySum = 0;
+            foreach (var workday in filteredWorkdays)
+            {
+                capacitySum += workday.FDuration;
+            }
+
+            return capacitySum;
         }
     }
 }
