@@ -28,6 +28,9 @@ namespace com.jiuhuan.plan.view
                 this.dataGridView1.DataSource = null;
                 this.dataGridView1.Rows.Clear();
             };
+
+            tabPage1.Layout += TabPage_Layout;
+            tabPage2.Layout += TabPage_Layout;
         }
 
         protected override FlowLayoutPanel GetFlowLayoutPanel()

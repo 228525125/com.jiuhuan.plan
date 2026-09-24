@@ -27,6 +27,8 @@ namespace com.jiuhuan.plan.view
                 this.dataGridView1.DataSource = null;
                 this.dataGridView1.Rows.Clear();
             };
+
+            tabPage2.Layout += TabPage_Layout;
         }
 
         /// <summary>
@@ -36,7 +38,6 @@ namespace com.jiuhuan.plan.view
         /// <param name="e"></param>
         private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            int i = 0;
             //this.dataGridView1.Rows[e.RowIndex].Cells["FItemCode"].Value = record.FNumber;
         }
 

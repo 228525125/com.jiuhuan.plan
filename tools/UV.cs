@@ -1155,6 +1155,66 @@ namespace com.jiuhuan.plan
             {
                 foreach (var t in data)
                 {
+                    // 检查T类型的所有属性字段是否包含OneToMany特性，如果有则单独删除子实体
+                    var property = Utility.GetPropertyWithAttribute<T>("OneToMany");
+                    if (null != property)
+                    {
+                        // 获取属性上的OneToMany特性
+                        var oneToManyAttr = property.GetCustomAttribute<OneToManyAttribute>(true);
+
+                        if (oneToManyAttr != null)
+                        {
+                            try
+                            {
+                                // 处理 OneToMany 关联数据的加载
+                                LoadOneToManyData(t);
+
+                                // 获取子实体列表的值
+                                var childList = property.GetValue(t) as IList;
+
+                                if (childList != null && childList.Count > 0)
+                                {
+                                    // 遍历子实体列表并删除
+                                    foreach (var childItem in childList)
+                                    {
+                                        if (childItem is Entity childEntity)
+                                        {
+                                            DaoTemplate.Delete(childEntity);
+                                        }
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"删除关联数据 {property.Name} 时出错: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+
+                    // 检查T类型的所有属性字段是否包含ManyToMany特性，如果有则删除多对多关联数据
+                    var manyToManyProperty = Utility.GetPropertyWithAttribute<T>("ManyToMany");
+                    if (null != manyToManyProperty)
+                    {
+                        // 获取属性上的ManyToMany特性
+                        var manyToManyAttr = manyToManyProperty.GetCustomAttribute<ManyToManyAttribute>(true);
+
+                        if (manyToManyAttr != null)
+                        {
+                            try
+                            {
+                                // 处理 ManyToMany 关联数据的加载
+                                LoadManyToManyData(t);
+
+                                // 删除多对多关联数据中间表
+                                DeleteManyToManyRelationships(t, manyToManyProperty, manyToManyAttr);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"保存多对多关联数据 {manyToManyProperty.Name} 时出错: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+
                     count += DaoTemplate.Delete(t);
 
                     if (DaoTemplate.SqlException != null)
@@ -1174,6 +1234,302 @@ namespace com.jiuhuan.plan
             progressWindow.Close();
 
             MessageBox.Show($"删除成功，共{count}条数据！", "提示信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        /// <summary>
+        /// 加载 OneToMany 关联数据
+        /// </summary>
+        /// <param name="record">父记录对象</param>
+        public static void LoadOneToManyData<T>(T record) where T : Entity
+        {
+            if (record == null) return;
+
+            // 处理 OneToMany 关联数据的加载
+            Type recordType = typeof(T);
+            var properties = recordType.GetProperties();
+
+            foreach (var property in properties)
+            {
+                // 检查是否包含 OneToMany 特性
+                var oneToManyAttr = Attribute.GetCustomAttribute(property, typeof(OneToManyAttribute)) as OneToManyAttribute;
+
+                if (oneToManyAttr != null)
+                {
+                    try
+                    {
+                        // 获取子实体类型
+                        Type childType = oneToManyAttr.ChildType;
+
+                        // 获取外键字段名 (joinColumn) 和映射字段名 (mappedBy)
+                        string joinColumn = oneToManyAttr.JoinColumn;
+                        string mappedBy = oneToManyAttr.MappedBy;
+
+                        if (string.IsNullOrEmpty(joinColumn) || string.IsNullOrEmpty(mappedBy))
+                        {
+                            Console.WriteLine($"属性 {property.Name} 的 OneToMany 特性未正确配置 JoinColumn 或 MappedBy");
+                            continue;
+                        }
+
+                        // 获取当前父记录的 joinColumn 字段值，用于关联查询
+                        var joinColumnProperty = recordType.GetProperty(joinColumn);
+                        if (joinColumnProperty == null)
+                        {
+                            Console.WriteLine($"父记录中未找到字段 {joinColumn}");
+                            continue;
+                        }
+
+                        object parentKeyValue = joinColumnProperty.GetValue(record);
+
+                        if (parentKeyValue == null)
+                        {
+                            // 如果父记录的关键字段为空，初始化为空列表
+                            var lt = typeof(List<>).MakeGenericType(childType);
+                            var emptyList = Activator.CreateInstance(lt);
+                            property.SetValue(record, emptyList);
+                            continue;
+                        }
+
+                        // 构建查询条件：ChildType.mappedBy = ParentRecord.joinColumn
+                        // 使用 DaoTemplate.FindAll<T>() 方法加载所有子记录，然后在内存中过滤
+                        // 或者构造 SQL 查询
+
+                        // 方法1：使用 SQL 查询（推荐，性能更好）
+                        string tableName = UV.GetTableName(childType);
+                        if (string.IsNullOrEmpty(tableName))
+                        {
+                            Console.WriteLine($"无法获取子实体 {childType.Name} 的表名");
+                            continue;
+                        }
+
+                        // 格式化参数值
+                        string formattedValue = DaoTemplate.FormatSqlValue(parentKeyValue);
+                        string sql = $"SELECT * FROM [{tableName}] WHERE [{mappedBy}] = {formattedValue}";
+
+                        // 执行查询
+                        List<Dictionary<string, object>> rows = DaoTemplate.FindAll(sql);
+
+                        // 将 Dictionary 列表转换为实体列表
+                        var listType = typeof(List<>).MakeGenericType(childType);
+                        var resultList = Activator.CreateInstance(listType) as System.Collections.IList;
+
+                        foreach (var row in rows)
+                        {
+                            object entity = UV.ConvertDictionaryToEntity(row, childType);
+                            if (entity != null)
+                            {
+                                resultList.Add(entity);
+                            }
+                        }
+
+                        // 将结果赋值给属性
+                        property.SetValue(record, resultList);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"加载 OneToMany 属性 {property.Name} 时出错: {ex.Message}");
+                        // 出错时初始化为空列表，避免空引用异常
+                        var childType = oneToManyAttr.ChildType;
+                        var listType = typeof(List<>).MakeGenericType(childType);
+                        var emptyList = Activator.CreateInstance(listType);
+                        property.SetValue(record, emptyList);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 加载 ManyToMany 关联数据（通过中间表查询多对多关系）
+        /// 中间表命名规则：实体名_关联实体名，如 Department_User
+        /// 中间表字段命名规则：实体名_关联字段名，如 Department_FNumber、User_FName
+        /// </summary>
+        /// <param name="record">父记录对象</param>
+        public static void LoadManyToManyData<T>(T record) where T : Entity
+        {
+            if (record == null) return;
+
+            Type recordType = typeof(T);
+            var properties = recordType.GetProperties();
+
+            foreach (var property in properties)
+            {
+                // 检查是否包含 ManyToMany 特性
+                var manyToManyAttr = Attribute.GetCustomAttribute(property, typeof(ManyToManyAttribute)) as ManyToManyAttribute;
+
+                if (manyToManyAttr != null)
+                {
+                    try
+                    {
+                        // 获取关联实体类型
+                        Type childType = manyToManyAttr.ChildType;
+
+                        // 获取中间表名称
+                        string mappingTable = manyToManyAttr.MappingTable;
+                        // 获取关联方字段名（当前实体的字段）和被关联方字段名（子实体的字段）
+                        string joinColumn = manyToManyAttr.JoinColumn;
+                        string mappedBy = manyToManyAttr.MappedBy;
+
+                        if (string.IsNullOrEmpty(mappingTable) || string.IsNullOrEmpty(joinColumn) || string.IsNullOrEmpty(mappedBy))
+                        {
+                            Console.WriteLine($"属性 {property.Name} 的 ManyToMany 特性未正确配置 MappingTable、JoinColumn 或 MappedBy");
+                            continue;
+                        }
+
+                        // 获取当前父记录的 joinColumn 字段值
+                        var joinColumnProperty = recordType.GetProperty(joinColumn);
+                        if (joinColumnProperty == null)
+                        {
+                            Console.WriteLine($"父记录中未找到字段 {joinColumn}");
+                            continue;
+                        }
+
+                        object parentKeyValue = joinColumnProperty.GetValue(record);
+
+                        if (parentKeyValue == null)
+                        {
+                            // 如果父记录的关键字段为空，初始化为空列表
+                            var lt = typeof(List<>).MakeGenericType(childType);
+                            var emptyList = Activator.CreateInstance(lt);
+                            property.SetValue(record, emptyList);
+                            continue;
+                        }
+
+                        // 获取关联实体的表名
+                        string childTableName = UV.GetTableName(childType);
+                        if (string.IsNullOrEmpty(childTableName))
+                        {
+                            Console.WriteLine($"无法获取关联实体 {childType.Name} 的表名");
+                            continue;
+                        }
+
+                        // 构建中间表字段名：实体名_字段名
+                        string parentEntityFieldName = $"{recordType.Name}_{joinColumn}";
+                        string childEntityFieldName = $"{childType.Name}_{mappedBy}";
+
+                        // 构建SQL查询：通过中间表关联查询
+                        string formattedValue = DaoTemplate.FormatSqlValue(parentKeyValue);
+                        string sql = $"SELECT [{childTableName}].* FROM [{childTableName}] " +
+                                     $"INNER JOIN [{mappingTable}] ON [{childTableName}].[{mappedBy}] = [{mappingTable}].[{childEntityFieldName}] " +
+                                     $"WHERE [{mappingTable}].[{parentEntityFieldName}] = {formattedValue}";
+
+                        // 执行查询
+                        List<Dictionary<string, object>> rows = DaoTemplate.FindAll(sql);
+
+                        // 将 Dictionary 列表转换为实体列表
+                        var listType = typeof(List<>).MakeGenericType(childType);
+                        var resultList = Activator.CreateInstance(listType) as System.Collections.IList;
+
+                        foreach (var row in rows)
+                        {
+                            object entity = UV.ConvertDictionaryToEntity(row, childType);
+                            if (entity != null)
+                            {
+                                resultList.Add(entity);
+                            }
+                        }
+
+                        // 将结果赋值给属性
+                        property.SetValue(record, resultList);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"加载 ManyToMany 属性 {property.Name} 时出错: {ex.Message}");
+                        // 出错时初始化为空列表，避免空引用异常
+                        var childType = manyToManyAttr.ChildType;
+                        var listType = typeof(List<>).MakeGenericType(childType);
+                        var emptyList = Activator.CreateInstance(listType);
+                        property.SetValue(record, emptyList);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 保存多对多关联数据
+        /// 中间表字段命名规则：实体名_关联字段名，如 Department_FNumber、User_FName
+        /// </summary>
+        /// <param name="parentRecord">父记录对象</param>
+        /// <param name="property">被 ManyToMany 特性修饰的属性</param>
+        /// <param name="manyToManyAttr">ManyToMany 特性对象</param>
+        private static void DeleteManyToManyRelationships<T>(T parentRecord, PropertyInfo property, ManyToManyAttribute manyToManyAttr) where T : Entity
+        {
+            if (parentRecord == null || property == null || manyToManyAttr == null)
+                return;
+
+            try
+            {
+                // 获取 ManyToMany 特性的配置
+                string mappingTable = manyToManyAttr.MappingTable;
+                string joinColumn = manyToManyAttr.JoinColumn;
+                string mappedBy = manyToManyAttr.MappedBy;
+                Type childType = manyToManyAttr.ChildType;
+
+                if (string.IsNullOrEmpty(mappingTable) || string.IsNullOrEmpty(joinColumn) || string.IsNullOrEmpty(mappedBy))
+                {
+                    Console.WriteLine($"属性 {property.Name} 的 ManyToMany 特性未正确配置 MappingTable、JoinColumn 或 MappedBy");
+                    return;
+                }
+
+                // 获取父记录中 joinColumn 字段的值
+                var joinColumnProperty = typeof(T).GetProperty(joinColumn);
+                if (joinColumnProperty == null)
+                {
+                    Console.WriteLine($"父记录中未找到字段 {joinColumn}");
+                    return;
+                }
+
+                object parentKeyValue = joinColumnProperty.GetValue(parentRecord);
+
+                if (parentKeyValue == null)
+                {
+                    Console.WriteLine($"父记录的 {joinColumn} 字段值为空，跳过保存中间表数据");
+                    return;
+                }
+
+                // 获取子实体列表
+                var childList = property.GetValue(parentRecord) as IList;
+
+                if (childList == null || childList.Count == 0)
+                {
+                    Console.WriteLine($"属性 {property.Name} 的关联数据为空，跳过保存中间表数据");
+                    return;
+                }
+
+                // 构建中间表字段名：实体名_字段名
+                string parentEntityFieldName = $"{typeof(T).Name}_{joinColumn}";
+                string childEntityFieldName = $"{childType.Name}_{mappedBy}";
+
+                // 遍历子实体列表，逐条插入中间表
+                int insertedCount = 0;
+                foreach (var childItem in childList)
+                {
+                    // 获取子实体中 mappedBy 字段的值
+                    var mappedByProperty = childType.GetProperty(mappedBy);
+                    if (mappedByProperty == null)
+                    {
+                        Console.WriteLine($"关联实体 {childType.Name} 中未找到字段 {mappedBy}");
+                        continue;
+                    }
+
+                    object childKeyValue = mappedByProperty.GetValue(childItem);
+
+                    if (childKeyValue == null)
+                    {
+                        continue;
+                    }
+
+                    // 插入中间表记录
+                    string deleteSql = $"DELETE [{mappingTable}] WHERE [{parentEntityFieldName}] = '{parentKeyValue}' AND [{childEntityFieldName}] = '{childKeyValue}'";
+                    DaoTemplate.ExecuteNonQuery(deleteSql);
+                    insertedCount++;
+                }
+
+                Console.WriteLine($"删除多对多关联数据 {mappingTable}：{insertedCount} 条记录");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"保存多对多关联数据时出错: {ex.Message}");
+                // 不抛出异常，避免阻断主流程
+            }
         }
 
         public static int ProgressWindow_PercentComplete = 0;

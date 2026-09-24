@@ -100,7 +100,6 @@ namespace com.jiuhuan.plan.view
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "工序列表";
             this.tabPage2.UseVisualStyleBackColor = true;
-            this.tabPage2.Layout += TabPage_Layout;
             // 
             // dataGridView1
             // 
