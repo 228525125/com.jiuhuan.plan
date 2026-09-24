@@ -20,12 +20,24 @@ namespace com.jiuhuan.plan.view
 
         private void DatabaseEditForm_Load(object sender, EventArgs e)
         {
+            // 表单头发生改变时，表单明细也要改变
             var numberControl = FindControlByName<TextBox>(flowLayoutPanel1, "FNumber");
             numberControl.TextChanged += (s, args) =>
             {
                 this.dataGridView1.DataSource = null;
                 this.dataGridView1.Rows.Clear();
             };
+        }
+
+        /// <summary>
+        /// 添加行时，设置单元格默认值
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            int i = 0;
+            //this.dataGridView1.Rows[e.RowIndex].Cells["FItemCode"].Value = record.FNumber;
         }
 
         protected override FlowLayoutPanel GetFlowLayoutPanel()
@@ -64,7 +76,9 @@ namespace com.jiuhuan.plan.view
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-
+            // 增加一行
+            //var source = (BindingSource)this.dataGridView1.DataSource;
+            //source.Add(new TechnologyD() { FItemCode = record.FNumber });
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)

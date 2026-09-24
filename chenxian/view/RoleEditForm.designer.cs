@@ -110,7 +110,6 @@ namespace com.jiuhuan.plan.view
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "员工列表";
             this.tabPage2.UseVisualStyleBackColor = true;
-            this.tabPage2.Layout += TabPage_Layout;
             // 
             // dataGridView1
             // 
@@ -139,6 +138,7 @@ namespace com.jiuhuan.plan.view
             // toolStripButton1
             // 
             this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton1.Enabled = false;
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
@@ -149,7 +149,6 @@ namespace com.jiuhuan.plan.view
             // toolStripButton2
             // 
             this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton2.Enabled = false;
             this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
@@ -178,7 +177,6 @@ namespace com.jiuhuan.plan.view
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "权限列表";
             this.tabPage1.UseVisualStyleBackColor = true;
-            this.tabPage1.Layout += TabPage_Layout;
             // 
             // dataGridView2
             // 
@@ -207,6 +205,7 @@ namespace com.jiuhuan.plan.view
             // toolStripButton4
             // 
             this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton4.Enabled = false;
             this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
             this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton4.Name = "toolStripButton4";
@@ -217,12 +216,12 @@ namespace com.jiuhuan.plan.view
             // toolStripButton5
             // 
             this.toolStripButton5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton5.Enabled = false;
             this.toolStripButton5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton5.Image")));
             this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton5.Name = "toolStripButton5";
             this.toolStripButton5.Size = new System.Drawing.Size(43, 24);
             this.toolStripButton5.Text = "导入";
+            this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton5_Click);
             // 
             // toolStripButton6
             // 

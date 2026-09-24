@@ -22,8 +22,8 @@ namespace com.jiuhuan.plan.view
         {
             InitializeData();
 
-            dateTimePicker1.Value = DateTime.Now.AddMonths(-12);
-            dateTimePicker2.Value = DateTime.Now.AddMonths(1);
+            dateTimePicker1.Value = DateTime.Parse("2000-01-01");
+            dateTimePicker2.Value = DateTime.Parse("2099-12-31");
 
             // 初始化分页显示
             UpdatePageInfo();
@@ -44,20 +44,19 @@ namespace com.jiuhuan.plan.view
             return dataGridView2;
         }
 
-        protected override void FilterBills1()
+        protected override TextBox GetQueryTextBox()
         {
-            // 获取用户选择的参数
-            DateTime startDate = dateTimePicker1.Value.Date;
-            DateTime endDate = dateTimePicker2.Value.Date;
-            string queryText = textBox1.Text.Trim();
+            return textBox1;
+        }
 
-            // 过滤条件
-            filteredRecords1 = selectedRecords.Where(bill =>
-                bill.FDate >= startDate &&
-                bill.FDate <= endDate &&
-                (string.IsNullOrEmpty(queryText) ||
-                bill.FNumber.Contains(queryText))
-            ).ToList();
+        protected override DateTimePicker GetDateTimePicker1()
+        {
+            return dateTimePicker1;
+        }
+
+        protected override DateTimePicker GetDateTimePicker2()
+        {
+            return dateTimePicker2;
         }
 
         private void button1_Click(object sender, EventArgs e)

@@ -187,14 +187,14 @@ namespace com.jiuhuan.plan.view
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // BomEditForm
+            // TechnologyEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1257, 601);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.panel1);
-            this.Name = "BomEditForm";
+            this.Name = "TechnologyEditForm";
             this.Text = "DatabaseEditForm";
             this.Load += new System.EventHandler(this.DatabaseEditForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);

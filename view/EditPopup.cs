@@ -544,6 +544,9 @@ namespace com.jiuhuan.plan.view
 
                             // 直接从 DataGridView 单元格构建实体（最可靠的方式）
                             object entity = UV.CreateEntityFromDataGridViewRow(row, childType);
+
+                            // 设置外键
+
                             if (entity != null)
                             {
                                 entityList.Add(entity);

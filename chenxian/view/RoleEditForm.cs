@@ -65,6 +65,11 @@ namespace com.jiuhuan.plan.view
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
+            
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
             try
             {
                 Import_OpenPopup();
@@ -73,11 +78,6 @@ namespace com.jiuhuan.plan.view
             {
                 MessageBox.Show($"操作失败：{ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void toolStripButton2_Click(object sender, EventArgs e)
-        {
-            
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
@@ -87,6 +87,16 @@ namespace com.jiuhuan.plan.view
 
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
+            
+        }
+
+        private void toolStripButton6_Click(object sender, EventArgs e)
+        {
+            DeleteSelectedRows();
+        }
+
+        private void toolStripButton5_Click(object sender, EventArgs e)
+        {
             try
             {
                 Import_OpenPopup();
@@ -95,11 +105,6 @@ namespace com.jiuhuan.plan.view
             {
                 MessageBox.Show($"操作失败：{ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void toolStripButton6_Click(object sender, EventArgs e)
-        {
-            DeleteSelectedRows();
         }
     }
 }

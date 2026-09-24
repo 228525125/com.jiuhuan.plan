@@ -12,7 +12,7 @@ namespace com.jiuhuan.plan {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "18.9.0.0")]
     internal sealed partial class Config : global::System.Configuration.ApplicationSettingsBase {
         
         private static Config defaultInstance = ((Config)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Config())));
@@ -297,7 +297,70 @@ AND m1.PLAN_COMPLETE_DATE >= '{0}' AND m1.PLAN_COMPLETE_DATE <= '{1}'")]
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SELECT * FROM v_schedule_final_findall_by_mo where FBillNo in ({0})")]
+        [global::System.Configuration.DefaultSettingValueAttribute("SELECT m1.DOC_NO as FBillNo\r\n,i1.ITEM_CODE as FNumber\r\n,i1.ITEM_NAME as FName\r\n,i" +
+            "1.ITEM_SPECIFICATION as FModel\r\n,CASE WHEN m1.STATUS = \'1\' THEN \'未生产\'\r\n       WH" +
+            "EN m1.STATUS = \'2\' THEN \'已发料\'\r\n       WHEN m1.STATUS = \'3\' THEN \'生产中\'\r\n       WH" +
+            "EN m1.STATUS = \'Y\' THEN \'已完工\'\r\n       WHEN m1.STATUS = \'y\' THEN \'指定完工\'\r\n    END " +
+            "AS FState\r\n,m3.SequenceNumber as FOperationId\r\n,m3.OPERATION_SEQ as FOperationNu" +
+            "mber\r\n,o1.OPERATION_NAME as FOperationName\r\n,m1.PLAN_COMPLETE_DATE as FMoPlanCom" +
+            "pleteDate    \r\n,m1.PLAN_QTY as FQty                               --计划数量\r\n,m1.CO" +
+            "MPLETED_QTY as FCompletedQty                 --入库数量 \r\n,ISNULL(m6.ISSUED_QTY,0) a" +
+            "s FDispatchedQty         --投入数\r\n,m3.COLLECT_QTY as FCollectQty                  " +
+            "   --工序报工数\r\n,m1.PLAN_QTY + ISNULL(m6.TRANSFER_IN_QTY,0) - ISNULL(m6.SCRAP_QTY,0)" +
+            " - ISNULL(m6.COMPLETED_QTY,0) - ISNULL(m6.DESTROYED_QTY,0) as FRemainQty        " +
+            "       --工序待加工数   工序待加工数=工单数量+工序投入调整量-工序报废数量-工序完成数量-工序破坏数量\r\n,CAST(CASE WHEN (m1." +
+            "PLAN_QTY + ISNULL(m6.TRANSFER_IN_QTY,0) - ISNULL(m6.SCRAP_QTY,0) - ISNULL(m6.COM" +
+            "PLETED_QTY,0) - ISNULL(m6.DESTROYED_QTY,0)) = ISNULL(m6.ISSUED_QTY,0) THEN (m1.P" +
+            "LAN_QTY + ISNULL(m6.TRANSFER_IN_QTY,0) - ISNULL(m6.SCRAP_QTY,0) - ISNULL(m6.COMP" +
+            "LETED_QTY,0) - ISNULL(m6.DESTROYED_QTY,0)) * ir1.DYNAMIC_MAN_HOUR + ir1.FIXED_MA" +
+            "N_HOUR\r\n      ELSE (m1.PLAN_QTY + ISNULL(m6.TRANSFER_IN_QTY,0) - ISNULL(m6.SCRAP" +
+            "_QTY,0) - ISNULL(m6.COMPLETED_QTY,0) - ISNULL(m6.DESTROYED_QTY,0)) * ir1.DYNAMIC" +
+            "_MAN_HOUR END AS INT) as FNeedWorkHours            --需要工时/秒,ir1.FIXED_MAN_HOUR a" +
+            "s FAidedWorkHour              --辅助工时\r\n,ir1.FIXED_MAN_HOUR as FAidedWorkHour     " +
+            "         --辅助工时\r\n,ir1.DYNAMIC_MAN_HOUR as FStandardWorkHours        --单套标准工时\r\n,G" +
+            "ETDATE() AS FOperationPlanStartDate              --工序预计开工时间\r\n,GETDATE() AS FOper" +
+            "ationPlanCompleteDate           --工序预计完工时间\r\n,MIS.是否缺料 AS FLack                  " +
+            "         --是否缺料\r\n,CAST(0 AS BIT) AS FTimeout                        --是否超期\r\n,CAS" +
+            "E WHEN w1.WORK_CENTER_NAME=\'制造一科\' THEN \'032-小巨人\'\r\n      WHEN w1.WORK_CENTER_NAME" +
+            "=\'制造三科\' THEN \'030-纵切西铁城\'\r\n      WHEN w1.WORK_CENTER_NAME=\'制造四科\' THEN \'505-装配\'\r\n " +
+            "     WHEN w1.WORK_CENTER_NAME=\'品质部\' THEN \'001-排液塞友嘉车\'\r\nEND AS FMachineTeam      " +
+            "                 --设备组      \r\n,o.CUSTOMER_CODE as FCustomerCode                 " +
+            " --客户代码\r\n,ISNULL(m5.UDF021, \'\') as FCustomerContractNo      --客户合同号\r\n,m1.CreateD" +
+            "ate as FMoCreateDate                    --工单制单时间\r\n,w1.WORK_CENTER_NAME as FWorkC" +
+            "enter                --科室\r\n,CAST(CASE \r\n        WHEN ST.FItemCode IS NOT NULL TH" +
+            "EN 1 \r\n        ELSE 0 \r\nEND AS bit) AS FExistsStampTemplate\r\n,CAST(CASE \r\n      " +
+            "  WHEN CB.FItemCode IS NOT NULL THEN 1 \r\n        ELSE 0 \r\nEND AS bit) AS FExists" +
+            "AccessoryBom\r\n,ISNULL([CQJH].dbo.GetValueByItemDesc(i1.ITEM_DESC, \';\', \'压力等级\'),\'" +
+            "\') AS FPressureLevel\r\n,ISNULL(QR.FQty,0) AS CYSQRCodeCount\r\n,m2.UDF025 AS FValve" +
+            "SerialNumberBegin\r\n,m2.UDF026 AS FValveSerialNumberEnd\r\n,ISNULL(CSC.FContent,\'ht" +
+            "tp://www.cqjuhan.com\') AS FCustomerStampContent\r\n,ISNULL(SR.FinishedCount, 0) AS" +
+            " FMarkedCount\r\n,CAST(CASE \r\n        WHEN vap.FNumber IS NOT NULL THEN 1 \r\n      " +
+            "  ELSE 0 \r\n    END AS bit) AS FExistsValveAutoProcess\r\nFROM CQJH.dbo.MO m1\r\nINNE" +
+            "R JOIN CQJH.dbo.MO_ROUTING m2 ON m1.MO_ID=m2.MO_ID\r\nINNER JOIN CQJH.dbo.MO_ROUTI" +
+            "NG_D m3 ON m2.MO_ROUTING_ID=m3.MO_ROUTING_ID\r\nINNER JOIN CQJH.dbo.MO_ROUTING_WOR" +
+            "K_CENTER m4 ON  m3.MO_ROUTING_D_ID=m4.MO_ROUTING_D_ID AND m4.MAIN_STATION=1     " +
+            " --工作中心 - 主要\r\nLEFT JOIN CQJH.dbo.MO_DEMAND m5 ON m1.MO_ID=m5.MO_ID            --" +
+            "需求信息\r\nLEFT JOIN CQJH.dbo.SALES_ORDER_DOC_SD sdd on sdd.SALES_ORDER_DOC_SD_ID=m5." +
+            "DEMAND_DOC_ROid   --订单子单身\r\nLEFT JOIN CQJH.dbo.SALES_ORDER_DOC_D sd on sd.SALES_O" +
+            "RDER_DOC_D_ID = sdd.SALES_ORDER_DOC_D_ID  --订单单身\r\nLEFT JOIN CQJH.dbo.SALES_ORDER" +
+            "_DOC s on s.SALES_ORDER_DOC_ID=sd.SALES_ORDER_DOC_ID         --订单单头\r\nLEFT JOIN C" +
+            "QJH.dbo.CUSTOMER o ON  s.CUSTOMER_ID = o.CUSTOMER_BUSINESS_ID \r\nINNER JOIN CQJH." +
+            "dbo.WORK_CENTER w1 ON m4.SOURCE_ID_ROid=w1.WORK_CENTER_ID\r\nINNER JOIN CQJH.dbo.I" +
+            "TEM i1 ON m1.ITEM_ID=i1.ITEM_BUSINESS_ID\r\nINNER JOIN CQJH.dbo.OPERATION o1 ON m3" +
+            ".OPERATION_ID=o1.OPERATION_ID\r\nLEFT JOIN CQJH.dbo.MO_ROUTING_WIP m6 ON m3.MO_ROU" +
+            "TING_D_ID = m6.MO_ROUTING_D_ID  --工单工艺工作中心生产信息\r\nINNER JOIN CQJH.dbo.ITEM_PLANT i" +
+            "2 ON i2.ITEM_ID=i1.ITEM_BUSINESS_ID\r\nLEFT JOIN CQJH.dbo.ITEM_ROUTING_D ir1 ON ir" +
+            "1.ITEM_ROUTING_ID=i2.STANDARD_ROUTING_ID AND ir1.OPERATION_SEQ=m3.OPERATION_SEQ\r" +
+            "\nLEFT JOIN coc.dbo.StampTemplateByItemCode ST ON i1.ITEM_CODE = ST.FItemCode\r\nLE" +
+            "FT JOIN coc.dbo.CustomerStampContent CSC ON CSC.FCustomerCode = o.CUSTOMER_CODE\r" +
+            "\nLEFT JOIN (SELECT FItemCode FROM CQJH.dbo.CX_BOM_Accessory GROUP BY FItemCode) " +
+            "CB ON i1.ITEM_CODE = CB.FItemCode\r\nLEFT JOIN (select FBillNo, COUNT(FID) AS FQty" +
+            " from coc.dbo.[CYSQRCode] GROUP BY FBillNo) QR ON QR.FBillNo = m1.DOC_NO\r\nLEFT J" +
+            "OIN (SELECT FBillNo, COUNT(*) AS FinishedCount FROM coc.dbo.StampRecord GROUP BY" +
+            " FBillNo) SR ON SR.FBillNo = m1.DOC_NO\r\nLEFT JOIN coc.dbo.ValveAutoProcess vap O" +
+            "N vap.FNumber=i1.ITEM_CODE\r\nLEFT JOIN v_MoInventoryStatus MIS ON m1.DOC_NO = MIS" +
+            ".工单号\r\nWHERE 1=1\r\nAND w1.WORK_CENTER_NAME = \'制造四科\'\r\nAND m1.DOC_NO in ({0})\r\nORDER" +
+            " BY m1.PLAN_COMPLETE_DATE,m1.DOC_NO\r\n")]
         public string v_schedule_final_findall_by_mo {
             get {
                 return ((string)(this["v_schedule_final_findall_by_mo"]));

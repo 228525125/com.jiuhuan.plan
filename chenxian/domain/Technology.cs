@@ -10,6 +10,7 @@ namespace com.jiuhuan.plan.domain
     [Entity(entirety: true, title: "工序参数")]
     public class Technology : Entity
     {
+        [Keyword]
         [Column(width: 100)]
         [TextBox(width: 100)]
         [Popup("请选择品号", IsMultipleColumnReturn = true)]

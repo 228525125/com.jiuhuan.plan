@@ -152,12 +152,61 @@ namespace com.jiuhuan.plan.view
             throw new NotImplementedException();
         }
 
+        protected virtual TextBox GetQueryTextBox()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual DateTimePicker GetDateTimePicker1()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual DateTimePicker GetDateTimePicker2()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 用于查询1
         /// </summary>
+        /// <summary>
+        /// 根据T类型的所有字符串属性进行模糊查询过滤
+        /// 遍历T类型的所有公共实例属性，对字符串类型的属性值进行Contains匹配
+        /// 查询文本从GetTextBox1()获取，过滤结果保存到filteredRecords1中
+        /// </summary>
         protected virtual void FilterBills1()
         {
-            throw new NotImplementedException();
+            // 获取用户选择的参数
+            DateTime startDate = GetDateTimePicker1().Value.Date;
+            DateTime endDate = GetDateTimePicker2().Value.Date;
+            string queryText = GetQueryTextBox().Text.Trim();
+
+            // 获取T类型的所有字符串类型属性
+            var stringProperties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.PropertyType == typeof(string))
+                .ToArray();
+
+            // 过滤条件
+            filteredRecords1 = selectedRecords.Where(bill =>
+            {
+                if (bill.FDate.Date < startDate || bill.FDate.Date > endDate)
+                    return false;
+
+                // 如果没有查询文本，则返回所有记录
+                if (string.IsNullOrEmpty(queryText))
+                    return true;
+
+                // 遍历所有字符串属性，只要任意一个属性值包含查询文本即匹配
+                foreach (var prop in stringProperties)
+                {
+                    string value = prop.GetValue(bill) as string;
+                    if (!string.IsNullOrEmpty(value) && value.Contains(queryText))
+                        return true;
+                }
+
+                return false;
+            }).ToList();
         }
 
         /// <summary>

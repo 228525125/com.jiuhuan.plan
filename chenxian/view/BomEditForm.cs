@@ -37,7 +37,7 @@ namespace com.jiuhuan.plan.view
         {
             try
             {
-                // 更新scheduleDetailsRecord对象
+                // 更新对象
                 UpdateRecordFromControls();
 
                 // 验证输入数据

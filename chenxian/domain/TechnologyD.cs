@@ -9,7 +9,7 @@ namespace com.jiuhuan.plan.domain
     [Entity(entirety: true, title: "工序参数列表")]
     public class TechnologyD : Entity
     {
-        [Column(width: 100)]
+        [Column(width: 100, readOnly: false)]
         [Keyword]
         [Field("品号")]
         public string FItemCode { get; set; }
