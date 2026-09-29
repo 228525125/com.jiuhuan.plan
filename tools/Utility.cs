@@ -15,6 +15,24 @@ namespace com.jiuhuan.plan.tools {
     public class Utility {
 
         /// <summary>
+        /// 生成日期+流水号的数字
+        /// 格式：yyMMdd + 3位流水号
+        /// </summary>
+        /// <param name="date">日期</param>
+        /// <param name="serialNumber">流水号（1-999）</param>
+        /// <returns>如 260929001</returns>
+        public static int GenerateSerialNumber(DateTime date, int serialNumber)
+        {
+            if (serialNumber < 1 || serialNumber > 999)
+                throw new ArgumentOutOfRangeException(nameof(serialNumber), "流水号必须在 1-999 之间");
+
+            string datePart = date.ToString("yyMMdd");
+            string serialPart = serialNumber.ToString("D3");
+
+            return int.Parse(datePart + serialPart);
+        }
+
+        /// <summary>
         /// 简单解析出xml标签中的内容
         /// </summary>
         /// <param name="xmlContent"></param>

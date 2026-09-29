@@ -21,8 +21,10 @@ namespace com.jiuhuan.plan.domain
 
         public string FNote { get; set; } = "";
 
-        [Column("顺序", 40, index: 10, readOnly: false, visible: false)]
-        public int FStatus { get; set; } = 0;
+        private int _FOrder = 0;
+
+        [Column("顺序", 70, index: 10, readOnly: false)]
+        public int FStatus { get { return _FOrder == 0 ? FID : _FOrder; } set { _FOrder = value; } }
 
         public bool FChecked { get; set; } = false;
 

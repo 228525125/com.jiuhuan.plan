@@ -446,18 +446,22 @@
     <Compile Include="chenxian\domain\Workday.cs" />
     <EmbeddedResource Include="chenxian\view\BomEditForm.resx">
       <DependentUpon>BomEditForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\BomForm.resx">
       <DependentUpon>BomForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\TechnologyEditForm.resx">
       <DependentUpon>TechnologyEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\DepartmentEditForm.resx">
       <DependentUpon>DepartmentEditForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\DepartmentForm.resx">
       <DependentUpon>DepartmentForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\RoleEditForm.resx">
       <DependentUpon>RoleEditForm.cs</DependentUpon>
@@ -470,6 +474,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\DocumentEditForm.resx">
       <DependentUpon>DocumentEditForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\ValveAutoProcessEditForm.resx">
       <DependentUpon>ValveAutoProcessEditForm.cs</DependentUpon>
@@ -485,15 +490,19 @@
     </EmbeddedResource>
     <EmbeddedResource Include="view\BaseForm.resx">
       <DependentUpon>BaseForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="view\BasePopup.resx">
       <DependentUpon>BasePopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="view\ChangePasswordForm.resx">
       <DependentUpon>ChangePasswordForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="view\CustomizationSettingsForm.resx">
       <DependentUpon>CustomizationSettingsForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\UserEditForm.resx">
       <DependentUpon>UserEditForm.cs</DependentUpon>

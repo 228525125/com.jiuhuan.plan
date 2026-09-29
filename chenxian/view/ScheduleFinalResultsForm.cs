@@ -223,10 +223,22 @@ namespace com.jiuhuan.plan.view
             }
 
             UV.Signature(records, user);
-            foreach (var record in records)
+
+
+            int serialNumber = Utility.GenerateSerialNumber(DateTime.Now, 1);
+
+            // 取当前列表中最大顺序号
+            if(null != selectedRecords && selectedRecords.Count > 0)
             {
+                serialNumber = selectedRecords.OrderByDescending(item => { return item.FStatus; }).ToList()[0].FStatus;
+            }
+
+            for (int i = 1; i <= records.Count; i++)
+            {
+                var record = records[i-1];
                 record.FOperationPlanStartDate = DateTime.Now.Date;
                 record.FOperationPlanCompleteDate = DateTime.Now.Date;
+                record.FStatus = serialNumber + i;
             }
 
             selectedRecords.InsertRange(selectedRecords.Count, records);
@@ -248,13 +260,6 @@ namespace com.jiuhuan.plan.view
             SelectAll();
         }
 
-        private void 排序ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FixedSequence();
-            this.button6.Visible = true;
-            this.button7.Visible = true;
-        }
-
         /// <summary>
         /// 上移
         /// </summary>
@@ -273,13 +278,6 @@ namespace com.jiuhuan.plan.view
         private void button7_Click(object sender, EventArgs e)
         {
             MoveDown();
-        }
-
-        private void 取消排序ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CannelSequence();
-            this.button6.Visible = false;
-            this.button7.Visible = false;
         }
 
         private void 显示隐藏列ToolStripMenuItem_Click(object sender, EventArgs e)

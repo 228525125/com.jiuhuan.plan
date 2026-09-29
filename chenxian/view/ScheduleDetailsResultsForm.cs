@@ -254,6 +254,14 @@ namespace com.jiuhuan.plan.view
 
                     // 转换为最终计划记录
                     var finalRecords = ConvertToScheduleFinalRecords(recordsInPeriod, begin, end, classes);
+                    int serialNumber = Utility.GenerateSerialNumber(DateTime.Now, 1);
+
+                    // 添加顺序号
+                    for (int i = 0; i < finalRecords.Count; i++)
+                    {
+                        var record = finalRecords[i];
+                        record.FStatus = serialNumber + i;
+                    }
 
                     var sql = string.Format(Config.Default.sql_schedule_final_record_deleteall, begin.Date.ToString("yyyy-MM-dd"), end.Date.ToString("yyyy-MM-dd"), user.FName, "全部".Equals(classes) ? "" : classes);
                     DaoTemplate.ExecuteNonQuery(sql);

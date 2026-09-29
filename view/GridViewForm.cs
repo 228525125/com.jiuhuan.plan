@@ -332,7 +332,7 @@ namespace com.jiuhuan.plan.view
             // 更新进度
             progressWindow.UpdateProgress(80, "正在将数据导入表格...");
 
-            UpdatePagination(selectedRecords);
+            UpdatePagination(selectedRecords.OrderBy(item => item.FStatus).ToList());
 
             // 更新进度
             progressWindow.UpdateProgress(100, "完成显示！");
@@ -719,28 +719,36 @@ namespace com.jiuhuan.plan.view
         /// <summary>
         /// 排序，固定查询结果的顺序
         /// </summary>
+        //protected void FixedSequence()
+        //{
+        //    foreach (var record in selectedRecords)
+        //        record.FStatus = 0;
+
+        //    if(!filteredRecords1.Any())
+        //        MessageBox.Show("请先进行查询！", "提示信息", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+        //    // 获取dataGridView1的所有行
+        //    DataGridView dataGridView = GetDataGridView1();
+        //    dataGridView.Columns["FStatus"].Visible = true;
+
+        //    // 遍历所有行，设置复选框为选中状态
+        //    int index = 10;
+        //    foreach (DataGridViewRow row in dataGridView.Rows)
+        //    {
+        //        var rowData = row.DataBoundItem as Entity;
+        //        rowData.FStatus = index;
+        //        index += 10;
+        //    }
+
+        //    dataGridView.Refresh();
+        //}
+
         protected void FixedSequence()
         {
-            foreach (var record in selectedRecords)
-                record.FStatus = 0;
-
-            if(!filteredRecords1.Any())
-                MessageBox.Show("请先进行查询！", "提示信息", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
             // 获取dataGridView1的所有行
-            DataGridView dataGridView = GetDataGridView1();
-            dataGridView.Columns["FStatus"].Visible = true;
-            
-            // 遍历所有行，设置复选框为选中状态
-            int index = 10;
-            foreach (DataGridViewRow row in dataGridView.Rows)
-            {
-                var rowData = row.DataBoundItem as Entity;
-                rowData.FStatus = index;
-                index += 10;
-            }
-
-            dataGridView.Refresh();
+            //DataGridView dataGridView = GetDataGridView1();
+            //dataGridView.Columns["FOrder"].Visible = true;
+            //dataGridView.Refresh();
         }
 
         /// <summary>
@@ -748,21 +756,14 @@ namespace com.jiuhuan.plan.view
         /// </summary>
         protected void CannelSequence()
         {
-            foreach (var record in selectedRecords)
-                record.FStatus = 0;
+            //foreach (var record in selectedRecords)
+            //    record.FStatus = 0;
 
-            // 获取dataGridView1的所有行
-            DataGridView dataGridView = GetDataGridView1();
-            dataGridView.Columns["FStatus"].Visible = false;
+            //// 获取dataGridView1的所有行
+            //DataGridView dataGridView = GetDataGridView1();
+            //dataGridView.Columns["FStatus"].Visible = false;
 
-            // 遍历所有行，设置复选框为选中状态
-            //foreach (DataGridViewRow row in dataGridView.Rows)
-            //{
-            //    var rowData = row.DataBoundItem as Entity;
-            //    rowData.FStatus = 0;
-            //}
-
-            dataGridView.Refresh();
+            //dataGridView.Refresh();
         }
 
         protected void MoveUp()

@@ -11,7 +11,7 @@ namespace com.jiuhuan.plan.domain
     {
         [Column(width: 100)]
         [TextBox(width: 100, readOnly: false)]                                                                                          //"品名" = 返回调用弹窗的控件，"品号=FNumber"多个用;隔开，等于返回属性名为FNumber的属性对应的控件
-        [Popup("请选择品号", sql: "SELECT ITEM_CODE AS 品号, ITEM_NAME AS 品名, ITEM_SPECIFICATION AS 规格  FROM CQJH.dbo.ITEM", Return = "品号=FNumber", IsMultipleColumnReturn = true)]
+        [Popup("请选择品号", sql: "SELECT ITEM_CODE AS 品号, ITEM_NAME AS 品名, ITEM_SPECIFICATION AS 规格  FROM CQJH.dbo.ITEM I WHERE NOT EXISTS(SELECT 1 FROM coc.dbo.ValveAutoProcess V WHERE I.ITEM_CODE=V.FNumber)", Return = "品号=FNumber", IsMultipleColumnReturn = true)]
         [Field("品号", allowNull:false)]
         public string FNumber { get; set; }
 
