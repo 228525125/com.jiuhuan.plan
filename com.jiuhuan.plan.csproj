@@ -91,6 +91,7 @@
     <Compile Include="chenxian\domain\Document.cs" />
     <Compile Include="chenxian\domain\Permission.cs" />
     <Compile Include="chenxian\domain\PressureTestResult.cs" />
+    <Compile Include="chenxian\domain\PrintTemplateData.cs" />
     <Compile Include="chenxian\domain\Role.cs" />
     <Compile Include="chenxian\domain\Technology.cs" />
     <Compile Include="chenxian\domain\TechnologyD.cs" />
@@ -149,6 +150,24 @@
     <Compile Include="chenxian\view\DocumentEditForm.designer.cs">
       <DependentUpon>DocumentEditForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="chenxian\view\PrintTemplateDataEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\PrintTemplateDataEditForm.designer.cs">
+      <DependentUpon>PrintTemplateDataEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\PrintTemplateDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\PrintTemplateDataForm.designer.cs">
+      <DependentUpon>PrintTemplateDataForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="chenxian\view\PressureTestResultReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="chenxian\view\PressureTestResultReportForm.designer.cs">
+      <DependentUpon>PressureTestResultReportForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="chenxian\view\ValveAutoProcessEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,12 +179,6 @@
     </Compile>
     <Compile Include="chenxian\view\ValveAutoProcessForm.designer.cs">
       <DependentUpon>ValveAutoProcessForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="chenxian\view\PressureTestResultReportForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="chenxian\view\PressureTestResultReportForm.designer.cs">
-      <DependentUpon>PressureTestResultReportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="chenxian\view\WorkingHoursReportForm.cs">
       <SubType>Form</SubType>
@@ -476,14 +489,20 @@
       <DependentUpon>DocumentEditForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\PrintTemplateDataEditForm.resx">
+      <DependentUpon>PrintTemplateDataEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\PrintTemplateDataForm.resx">
+      <DependentUpon>PrintTemplateDataForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="chenxian\view\PressureTestResultReportForm.resx">
+      <DependentUpon>PressureTestResultReportForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\ValveAutoProcessEditForm.resx">
       <DependentUpon>ValveAutoProcessEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\ValveAutoProcessForm.resx">
       <DependentUpon>ValveAutoProcessForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="chenxian\view\PressureTestResultReportForm.resx">
-      <DependentUpon>PressureTestResultReportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="chenxian\view\WorkingHoursReportForm.resx">
       <DependentUpon>WorkingHoursReportForm.cs</DependentUpon>

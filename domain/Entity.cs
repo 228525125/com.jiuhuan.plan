@@ -23,7 +23,7 @@ namespace com.jiuhuan.plan.domain
 
         private int _FOrder = 0;
 
-        [Column("顺序", 70, index: 10, readOnly: false)]
+        [Column("顺序", 70, index: 10, readOnly: false, visible: false)]
         public int FStatus { get { return _FOrder == 0 ? FID : _FOrder; } set { _FOrder = value; } }
 
         public bool FChecked { get; set; } = false;

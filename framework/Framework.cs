@@ -33,6 +33,7 @@ namespace com.jiuhuan.plan
             menuModel.AddEntity<ScheduleDetailsRecord>();
             menuModel.AddEntity<ScheduleFinalRecord>();
             menuModel.AddEntity<StampRecordSilianData>();
+            menuModel.AddEntity<PrintTemplateData>();
             menuModel.AddEntity<ValveAccessoryScanRecord>();
             menuModel.AddEntity<ValveAutoProcess>();
             menuModel.AddEntity<Bom>();
