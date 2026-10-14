@@ -226,19 +226,24 @@ namespace com.jiuhuan.plan.view
 
 
             int serialNumber = Utility.GenerateSerialNumber(DateTime.Now, 1);
-
+            bool sign = false;
             // 取当前列表中最大顺序号
             if(null != selectedRecords && selectedRecords.Count > 0)
             {
-                serialNumber = selectedRecords.OrderByDescending(item => { return item.FStatus; }).ToList()[0].FStatus;
+                var num = selectedRecords.OrderByDescending(item => { return item.FStatus; }).ToList()[0].FStatus;
+                if (serialNumber.ToString().Substring(0, 6).Equals(num.ToString().Substring(0, 6)))
+                {
+                    serialNumber = num;
+                    sign = true;
+                }
             }
 
-            for (int i = 1; i <= records.Count; i++)
+            for (int i = 0; i < records.Count; i++)
             {
-                var record = records[i-1];
+                var record = records[i];
                 record.FOperationPlanStartDate = DateTime.Now.Date;
                 record.FOperationPlanCompleteDate = DateTime.Now.Date;
-                record.FStatus = serialNumber + i;
+                record.FStatus = sign ? serialNumber + i + 1 : serialNumber + i;
             }
 
             selectedRecords.InsertRange(selectedRecords.Count, records);
